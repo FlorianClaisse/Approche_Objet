@@ -6,7 +6,13 @@ import java.util.UUID;
 public final class Product {
     private final UUID id;
     private final String name;
-    private int quantity;
+    private final int quantity;
+
+    public Product(Product product, int quantity) {
+        this.id = product.id;
+        this.name = product.name;
+        this.quantity = quantity;
+    }
 
     Product(String name, int quantity) {
         this.id = UUID.randomUUID();
@@ -14,16 +20,8 @@ public final class Product {
         this.quantity = quantity;
     }
 
-
     public String getName() { return name; }
-
-    public void add(int quantity) {
-        if (quantity > 0) this.quantity += quantity;
-    }
-
-    public void remove(int quantity) {
-        if (quantity < 0) this.quantity += quantity;
-    }
+    public int getQuantity() { return quantity; }
 
     @Override
     public boolean equals(Object o) {

@@ -116,7 +116,7 @@ public final class MyShop {
         String value = scanner.nextLine();
         int quantity = Integer.parseInt(value);
 
-        if (quantity > 0) product.add(quantity);
-        else product.remove(-quantity);
+        stock.remove(product);
+        stock.add(new Product(product, product.getQuantity() + quantity));
     }
 }

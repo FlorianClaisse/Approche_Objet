@@ -31,6 +31,8 @@ public final class Stock {
         products.add(product);
     }
 
+    public void remove(Product product) { products.remove(product); }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -40,9 +42,7 @@ public final class Stock {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(name, address, products);
-    }
+    public int hashCode() { return Objects.hash(name, address, products); }
 
     @Override
     public String toString() {
