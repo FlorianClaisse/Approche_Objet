@@ -17,8 +17,9 @@ public class MyAppli {
             switch (input) {
                 case "1" -> createStock();
                 case "2" -> addProductToStock();
-                case "3" -> showStockStats();
-                case "4" -> updateProductQuantity();
+                case "3" -> removeProductToStock();
+                case "4" -> showStockStats();
+                case "5" -> updateProductQuantity();
                 default -> System.out.println("Mauvaise entrée.");
             }
             showMenu();
@@ -32,8 +33,9 @@ public class MyAppli {
                 -------------------------------------------------------------
                 - [1] Créer un stock.
                 - [2] Ajouter des produits dans le stock.
-                - [3] Afficher les caractéristiques d'un stock.
-                - [4] Ajouter/Retirer une quantité d'un produit dans un stock.
+                - [3] Retirer un produit d'un stock.
+                - [4] Afficher les caractéristiques d'un stock.
+                - [5] Ajouter/Retirer une quantité d'un produit dans un stock.
                 - [0] Quitter le programme.
                 --------------------------------------------------------------
                 """);
@@ -49,7 +51,7 @@ public class MyAppli {
             System.out.println("----- Impossible de créer le stock -----");
     }
 
-    /** Add product to a existing stock with user entry. */
+    /** Add product to an existing stock with user entry. */
     private static void addProductToStock() {
         String stockName = startPrompt("Ajout d'un nouveau produit dans un stock", "Quelle est le nom du stock dans lequelle vous voulez ajouter un produi:");
 
@@ -60,14 +62,34 @@ public class MyAppli {
 
         String productName = userInput("Le nom du nouveau produit :");
         String quantity = userInput("La quantity de ce produit présent dans le stock : ");
+        String date = userInput("Si le produit que vous voulez ajouter est de la nourriture ajouter la DLC (ex: 16/08/2018) sinon entrer 0 :");
         int productQuantity = Integer.parseInt(quantity);
 
-        if (!shop.addProduct(stockName, productName, productQuantity)) {
-            errorMessage("----- Un produit avec le méme nom existe déjà dans ce stock. -----");
-            return;
+        if (date.equals("0")) {
+            if (!shop.addSanitary(stockName, productName, productQuantity)) {
+                errorMessage("----- Un produit avec le méme nom existe déjà dans ce stock. -----");
+                return;
+            }
+        } else {
+            if (!shop.addFood(stockName, productName, date, productQuantity)) {
+                errorMessage("----- Un produit avec le méme nom existe déjà dans ce stock. -----");
+                return;
+            }
         }
 
         endPrompt();
+    }
+
+    public static void removeProductToStock() {
+        String stockName = startPrompt("Retirer un produit d'un stock.", "Quelle est le nom du stock ou vous voulez retirer le produit:");
+
+        if (!shop.stockExists(stockName)) {
+            errorMessage("----- Aucun stock avec ce nom n'existe. -----");
+            return;
+        }
+
+        String productName = userInput("Quelle est ne nom du produit que vous voulez retirer:");
+        shop.removeProduct(stockName, productName);
     }
 
     /** Show product stock stats. */
@@ -87,7 +109,7 @@ public class MyAppli {
         } else System.out.println(shop.toString(stockName, choice));
     }
 
-    /** Update an existing product quantity in a existing stock. */
+    /** Update an existing product quantity in an existing stock. */
     private static void updateProductQuantity () {
         String stockName = startPrompt("Mettre à jour la qauntité d'un produit dans un stock", "Dans quel stock voulez-vous modifier un produit:");
 

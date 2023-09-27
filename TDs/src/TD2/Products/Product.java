@@ -1,10 +1,10 @@
-package TD2;
+package TD2.Products;
 
 import java.util.Objects;
 import java.util.UUID;
 
 /** A representation of a product. */
-public final class Product {
+public abstract class Product {
     private final UUID id;
     private final String name;
     private final int quantity;
@@ -20,6 +20,9 @@ public final class Product {
         this.name = name;
         this.quantity = quantity;
     }
+
+    public abstract boolean canBeSold();
+    public abstract Product update(int quantity);
 
     public String getName() { return name; }
     public int getQuantity() { return quantity; }
