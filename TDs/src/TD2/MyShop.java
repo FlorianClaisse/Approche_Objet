@@ -1,5 +1,8 @@
 package TD2;
 
+import TD2.Products.FoodProduct;
+import TD2.Products.SanitaryProduct;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +11,7 @@ public final class MyShop {
     private final Map<String, Stock> stocks = new HashMap<>();
 
     public boolean stockExists(String name) { return stocks.get(name) != null; }
-    public boolean productExists(String stockName, String productName) { return stockExists(stockName) && stocks.get(stockName).productExists(productName); }
+    public boolean productExists(String stockName, String productName) { return stockExists(stockName) && stocks.get(stockName).exists(productName); }
 
     public boolean addStock(String name, String address) {
         if (name.isBlank() || address.isBlank() || stocks.get(name) != null) return false;
@@ -17,23 +20,30 @@ public final class MyShop {
         return true;
     }
 
-    public boolean addProduct(String stockName, String productName, int quantity) {
+    public boolean addFood(String stockName, String productName, String date, int quantity) {
         if (stockExists(stockName)) {
-            stocks.get(stockName).addProduct(productName, quantity);
+            stocks.get(stockName).put(productName, new FoodProduct(productName, date, quantity));
             return true;
         }
         return false;
     }
 
-    public boolean updateProduct(String stockName, String productName, int udpatedQuantity) {
-        if (stockExists(stockName) && stocks.get(stockName).productExists(productName)) {
-            return stocks.get(stockName).updateProduct(productName, udpatedQuantity);
+    public boolean addSanitary(String stockName, String productName, int quantity) {
+        if (stockExists(stockName)) {
+            stocks.get(stockName).put(productName, new SanitaryProduct(productName, quantity));
+            return true;
         }
         return false;
     }
 
+    public void updateProduct(String stockName, String productName, int quantity) {
+        if (stockExists(stockName) && stocks.get(stockName).exists(productName)) {
+            stocks.get(stockName).update(productName, quantity);
+        }
+    }
+
     public void removeProduct(String stockName, String productName) {
-        stocks.get(stockName).removeProduct(productName);
+        stocks.get(stockName).remove(productName);
     }
 
     public String toString(String stockName) { return stockExists(stockName) ? stocks.get(stockName).toString() : ""; }

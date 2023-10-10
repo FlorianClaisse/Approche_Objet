@@ -1,57 +1,48 @@
 package TD2;
 
+import TD2.Products.Product;
+
 import java.util.HashMap;
 import java.util.Objects;
 
-public final class Stock {
+public final class Stock extends HashMap<String, Product> {
     private final String name;
     private final String address;
-    private final HashMap<String, Product> products = new HashMap<>();
 
     public Stock(String name, String address) {
         this.name = name;
         this.address = address;
     }
 
-    public boolean productExists(String name) {
-        return products.get(name) != null;
+    public boolean exists(String name) {
+        return this.get(name) != null;
     }
 
-    public int getProductQuantity(String name) {
-        Product product = products.get(name);
+    public int getQuantity(String name) {
+        Product product = get(name);
         if (product != null) return product.getQuantity();
         return -1;
     }
 
-    public boolean addProduct(String name, int quantity) {
-        if (productExists(name)) return false;
-        products.put(name, new Product(name, quantity));
-        return true;
-    }
-
-    public boolean updateProduct(String name, int newQuantity) {
-        if (productExists(name)) {
-            Product oldProduct = products.remove(name);
-            products.put(oldProduct.getName(), new Product(oldProduct, oldProduct.getQuantity() + newQuantity));
-            return true;
+    public void update(String name, int newQuantity) {
+        if (exists(name)) {
+            Product oldProduct = remove(name);
+            put(oldProduct.getName(), oldProduct.update(newQuantity));
         }
-        return false;
     }
-
-    public void removeProduct(String name) { products.remove(name); }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Stock stock = (Stock) o;
-        return name.equals(stock.name) && address.equals(stock.address) && products.equals(stock.products);
+        return name.equals(stock.name) && address.equals(stock.address) && super.equals(o);
     }
 
     @Override
-    public int hashCode() { return Objects.hash(name, address, products); }
+    public int hashCode() { return Objects.hash(name, address); }
 
     @Override
-    public String toString() { return "name: " + name + ", address: " + address + ", products: " + products; }
-    public String toString(String productName) { return productExists(productName) ? products.get(productName).toString() : ""; }
+    public String toString() { return "name: " + name + ", address: " + address + ", products : " + super.toString(); }
+    public String toString(String productName) { return exists(productName) ? get(productName).toString() : ""; }
 }
