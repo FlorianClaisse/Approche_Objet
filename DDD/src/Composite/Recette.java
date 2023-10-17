@@ -1,6 +1,6 @@
-package Decorator;
+package Composite;
 
-public interface GateauInterface {
+public interface Recette {
     String getName();
     Ingredients getIngredients();
 }

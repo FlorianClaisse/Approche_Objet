@@ -1,12 +1,12 @@
 package Decorator;
 
-public abstract class Decorator implements GateauInterface {
-    private GateauInterface gateauDecorated;
+public abstract class Decorator implements Recette {
+    private Recette recetteDecorated;
 
-    public Decorator(GateauInterface gateauDecorated) {
-        this.gateauDecorated = gateauDecorated;
+    public Decorator(Recette recetteDecorated) {
+        this.recetteDecorated = recetteDecorated;
     }
 
-    @Override public String getName() { return gateauDecorated.getName(); }
-    @Override public Ingredients getIngredients() { return gateauDecorated.getIngredients(); }
+    @Override public String getName() { return recetteDecorated.getName(); }
+    @Override public Ingredients getIngredients() { return recetteDecorated.getIngredients(); }
 }

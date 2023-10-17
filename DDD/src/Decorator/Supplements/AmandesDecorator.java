@@ -3,7 +3,7 @@ package Decorator.Supplements;
 import Decorator.*;
 
 public class AmandesDecorator extends Decorator {
-    public AmandesDecorator(GateauInterface gateauDecorated) {
+    public AmandesDecorator(Recette gateauDecorated) {
         super(gateauDecorated);
     }
 

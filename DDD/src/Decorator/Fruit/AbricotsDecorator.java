@@ -3,7 +3,7 @@ package Decorator.Fruit;
 import Decorator.*;
 
 public class AbricotsDecorator extends Decorator {
-    public AbricotsDecorator(GateauInterface gateauDecorated) {
+    public AbricotsDecorator(Recette gateauDecorated) {
         super(gateauDecorated);
     }
 

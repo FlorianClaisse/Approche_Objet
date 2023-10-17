@@ -1,9 +1,9 @@
 package Decorator.Gateau;
 
-import Decorator.GateauInterface;
 import Decorator.Ingredients;
+import Decorator.Recette;
 
-public abstract class Gateau implements GateauInterface {
+public abstract class Gateau implements Recette {
     private final String name;
     private Ingredients ingredients;
 
