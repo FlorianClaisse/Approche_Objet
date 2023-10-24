@@ -1,6 +1,7 @@
 package Decorator.Supplements;
 
-import Decorator.*;
+import Decorator.Decorator;
+import Decorator.Recette;
 
 public class NoisetteDecorator extends Decorator {
     public NoisetteDecorator(Recette gateauDecorated) {

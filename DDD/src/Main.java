@@ -6,12 +6,7 @@ import Decorator.Supplements.AmandesDecorator;
 import Decorator.Supplements.ChantillyDecorator;
 import Decorator.Supplements.MeringueDecorator;*/
 
-import Composite.Fruit.Pomme;
-import Composite.GateauComposite;
-import Composite.Gateau.Tarte;
-import Composite.Supplements.Chantilly;
-import Composite.Supplements.Meringue;
-import Decorator.Gateau.Gateau;
+import Builder.GateauDirector;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,11 +18,22 @@ public class Main {
         /*System.out.println(tarte.getName());
         System.out.println(choux.getName());*/
 
-        GateauComposite gateau = new GateauComposite();
+        /*GateauComposite gateau = new GateauComposite();
         gateau.addFils(new Tarte());
-        gateau.addFils(new Pomme());
+        gateau.addFils(new Pommes());
         gateau.addFils(new Chantilly());
 
-        System.out.println(gateau.getName());
+        System.out.println(gateau.getName());*/
+
+        GateauDirector director = new GateauDirector();
+        director.constructChouxVanille();
+
+        System.out.println(director.getBuilder().getGateau().getName());
+
+        director.constructChouxChocolatNoisette();
+        System.out.println(director.getBuilder().getGateau().getName());
+
+        director.constructTarteFeuilleteAbricotMeringue();
+        System.out.println(director.getBuilder().getGateau().getName());
     }
 }

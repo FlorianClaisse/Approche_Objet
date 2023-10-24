@@ -1,8 +1,5 @@
 package Composite;
 
-import Composite.Ingredients;
-import Composite.Recette;
-
 import java.util.ArrayList;
 import java.util.List;
 
