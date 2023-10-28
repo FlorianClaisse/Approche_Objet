@@ -4,7 +4,7 @@ import Composite.*;
 
 public class TartePommeChantillyFactory extends GateauFactory {
     @Override
-    Recette create() {
+    public Recette create() {
         GateauComposite tarte = new GateauComposite();
         tarte.addFils(new Pate(Pate.Type.SABLEE));
         tarte.addFils(new Fruit(Fruit.Type.POMME));

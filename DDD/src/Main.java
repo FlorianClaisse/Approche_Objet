@@ -6,7 +6,11 @@ import Decorator.Supplements.AmandesDecorator;
 import Decorator.Supplements.ChantillyDecorator;
 import Decorator.Supplements.MeringueDecorator;*/
 
+import AbstractFactory.ChouxVanilleFactory;
+import AbstractFactory.GateauFactory;
+import AbstractFactory.TartePommeChantillyFactory;
 import Builder.GateauDirector;
+import Composite.Recette;
 
 public class Main {
     public static void main(String[] args) {
@@ -35,5 +39,13 @@ public class Main {
 
         director.constructTarteFeuilleteAbricotMeringue();
         System.out.println(director.getBuilder().getGateau().getName());
+
+        GateauFactory factory = new ChouxVanilleFactory();
+        Recette chouxVanille = factory.create();
+        System.out.println(chouxVanille.getName());
+
+        factory = new TartePommeChantillyFactory();
+        Recette tartePommeChantilly = factory.create();
+        System.out.println(tartePommeChantilly.getName());
     }
 }
