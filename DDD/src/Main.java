@@ -1,51 +1,107 @@
-/*import Decorator.*;
-import Decorator.Creme.VanilleDecorator;
+import Decorator.Creme.*;
 import Decorator.Fruit.*;
 import Decorator.Gateau.*;
-import Decorator.Supplements.AmandesDecorator;
-import Decorator.Supplements.ChantillyDecorator;
-import Decorator.Supplements.MeringueDecorator;*/
+import Decorator.Supplements.*;
+import Composite.*;
 
-import AbstractFactory.ChouxVanilleFactory;
-import AbstractFactory.GateauFactory;
-import AbstractFactory.TartePommeChantillyFactory;
-import Builder.GateauDirector;
-import Composite.Recette;
+import Builder.*;
+import AbstractFactory.*;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        // exampleWithDecorator();
+        // exampleWithCompositeWithoutBuilder();
+        // exampleWithCompositeAndBuilder();
+        // exampleWithCompositeAndFactory();
+    }
 
-        /*Recette tarte = new MeringueDecorator(new PommeDecorator(new Tarte(null)));
-        Recette choux = new AmandesDecorator(new ChantillyDecorator(new VanilleDecorator(new Choux(null))));*/
+    public static void exampleWithDecorator() {
+        // Tarte aux pommes
+        Decorator.Recette tarte1 = new PommesDecorator(new Tarte(null));
+        System.out.println(tarte1.getName());
 
-        /*System.out.println(tarte.getName());
-        System.out.println(choux.getName());*/
+        // Tarte aux abricots meringuée
+        Decorator.Recette tarte2 = new MeringueDecorator(new AbricotsDecorator(new Tarte(null)));
+        System.out.println(tarte2.getName());
 
-        /*GateauComposite gateau = new GateauComposite();
-        gateau.addFils(new Tarte());
-        gateau.addFils(new Pommes());
-        gateau.addFils(new Chantilly());
+        // Chou à la vanille suppléments chantilly et amandes
+        Decorator.Recette chou1 = new ChocolatDecorator(new Chou(null));
+        System.out.println(chou1.getName());
 
-        System.out.println(gateau.getName());*/
+        // Chou à la vanille suppléments chantilly et amandes
+        Decorator.Recette chou2 = new AmandesDecorator(new ChantillyDecorator(new VanilleDecorator(new Chou(null))));
+        System.out.println(chou2.getName());
+    }
 
-        GateauDirector director = new GateauDirector();
-        director.constructChouxVanille();
+    public static void exampleWithCompositeWithoutBuilder() {
+        // Tarte (feuilletée) aux pommes
+        GateauComposite gateau1 = new GateauComposite();
+        gateau1.addFils(new Pate(Pate.Type.FEUILLETEE));
+        gateau1.addFils(new Fruit(Fruit.Type.POMME));
+        System.out.println(gateau1.getName());
 
-        System.out.println(director.getBuilder().getGateau().getName());
+        // Tarte (brisée) aux abricots meringuée
+        GateauComposite gateau2 = new GateauComposite();
+        gateau2.addFils(new Pate(Pate.Type.BRISEE));
+        gateau2.addFils(new Fruit(Fruit.Type.ABRICOT));
+        gateau2.addFils(new Supplement(Supplement.Type.MERINGUE));
+        System.out.println(gateau2.getName());
 
-        director.constructChouxChocolatNoisette();
-        System.out.println(director.getBuilder().getGateau().getName());
+        // Chou au chocolat
+        GateauComposite gateau3 = new GateauComposite();
+        gateau3.addFils(new Pate(Pate.Type.CHOUX));
+        gateau3.addFils(new Creme(Creme.Type.CHOCOLAT));
+        System.out.println(gateau3.getName());
 
-        director.constructTarteFeuilleteAbricotMeringue();
-        System.out.println(director.getBuilder().getGateau().getName());
+        // Chou à la vanille suppléments chantilly et amandes
+        GateauComposite gateau4 = new GateauComposite();
+        gateau4.addFils(new Pate(Pate.Type.CHOUX));
+        gateau4.addFils(new Creme(Creme.Type.VANILLE));
+        gateau4.addFils(new Supplement(Supplement.Type.CHANTILLY));
+        gateau4.addFils(new Supplement(Supplement.Type.AMANDE));
+        System.out.println(gateau4.getName());
+    }
 
-        GateauFactory factory = new ChouxVanilleFactory();
-        Recette chouxVanille = factory.create();
-        System.out.println(chouxVanille.getName());
+    public static void exampleWithCompositeAndBuilder() {
+        Patissier patissier = new Patissier();
 
-        factory = new TartePommeChantillyFactory();
-        Recette tartePommeChantilly = factory.create();
-        System.out.println(tartePommeChantilly.getName());
+        // Tarte (feuilletée) aux pommes
+        patissier.makeTarteFeuilleteePomme();
+        System.out.println(patissier.getBuilder().getGateau().getName());
+
+        // Tarte (brisée) aux abricots meringuée
+        patissier.makeTarteBriseeAbricotMeringue();
+        System.out.println(patissier.getBuilder().getGateau().getName());
+
+        // Chou au chocolat
+        patissier.makeChouChocolat();
+        System.out.println(patissier.getBuilder().getGateau().getName());
+
+        // Chou à la vanille suppléments chantilly et amandes
+        patissier.makeChouVanilleChantillyAmandes();
+        System.out.println(patissier.getBuilder().getGateau().getName());
+    }
+
+    public static void exampleWithCompositeAndFactory() {
+        GateauFactory factory1 = new TarteFeuilleteePommeFactory();
+        GateauFactory factory2 = new TarteBriseeAbricotMeringueFactory();
+        GateauFactory factory3 = new ChouChocolat();
+        GateauFactory factory4 = new ChouVanilleChantillyAmandeFactory();
+
+        // Tarte (feuilletée) aux pommes
+        Recette tarte1 = factory1.make();
+        System.out.println(tarte1.getName());
+
+        // Tarte (brisée) aux abricots meringuée
+        Recette tarte2 = factory2.make();
+        System.out.println(tarte2.getName());
+
+        // Chou au chocolat
+        Recette chou1 = factory3.make();
+        System.out.println(chou1.getName());
+
+        // Chou à la vanille suppléments chantilly et amandes
+        Recette chou2 = factory4.make();
+        System.out.println(chou2.getName());
     }
 }

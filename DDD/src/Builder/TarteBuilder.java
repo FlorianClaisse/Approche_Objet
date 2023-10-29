@@ -5,7 +5,6 @@ import Composite.Pate;
 import Composite.Supplement;
 
 public class TarteBuilder extends GateauBuilder {
-
     private final Pate.Type pate;
     private Fruit.Type fruits;
     private Supplement.Type supplement1;
@@ -14,17 +13,14 @@ public class TarteBuilder extends GateauBuilder {
     public TarteBuilder(Pate.Type pate) {
         this.pate = pate;
     }
-
     public TarteBuilder(Pate.Type pate, Fruit.Type fruits) {
         this(pate);
         this.fruits = fruits;
     }
-
     public TarteBuilder(Pate.Type pate, Fruit.Type fruits, Supplement.Type supplement1) {
         this(pate, fruits);
         this.supplement1 = supplement1;
     }
-
     public TarteBuilder(Pate.Type pate, Fruit.Type fruits, Supplement.Type supplement1, Supplement.Type supplement2) {
         this(pate, fruits, supplement1);
         this.supplement2 = supplement2;

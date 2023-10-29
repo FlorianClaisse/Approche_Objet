@@ -1,5 +1,6 @@
 package Composite;
 
+/* FeuilleB */
 public class Fruit implements Recette {
     private final Fruit.Type fruit;
 

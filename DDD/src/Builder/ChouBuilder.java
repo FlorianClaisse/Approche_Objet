@@ -4,22 +4,19 @@ import Composite.Creme;
 import Composite.Pate;
 import Composite.Supplement;
 
-public class ChouxBuilder extends GateauBuilder {
-
+public class ChouBuilder extends GateauBuilder {
     private final Creme.Type creme;
     private Supplement.Type supplement1;
     private Supplement.Type supplement2;
 
-    public ChouxBuilder(Creme.Type creme) {
+    public ChouBuilder(Creme.Type creme) {
         this.creme = creme;
     }
-
-    public ChouxBuilder(Creme.Type creme, Supplement.Type supplement) {
+    public ChouBuilder(Creme.Type creme, Supplement.Type supplement) {
         this(creme);
         this.supplement1 = supplement;
     }
-
-    public ChouxBuilder(Creme.Type creme, Supplement.Type supplement1, Supplement.Type supplement2) {
+    public ChouBuilder(Creme.Type creme, Supplement.Type supplement1, Supplement.Type supplement2) {
         this(creme, supplement1);
         this.supplement2 = supplement2;
     }

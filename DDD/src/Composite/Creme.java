@@ -1,5 +1,6 @@
 package Composite;
 
+/* FeuilleA */
 public class Creme implements Recette {
     private final Creme.Type parfum;
 

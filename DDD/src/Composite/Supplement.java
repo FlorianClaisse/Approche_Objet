@@ -1,5 +1,6 @@
 package Composite;
 
+/* FeuilleD */
 public class Supplement implements Recette {
     private final Supplement.Type type;
 

@@ -1,5 +1,6 @@
 package Composite;
 
+/* FeuilleC */
 public class Pate implements Recette {
     private final Pate.Type pate;
 
@@ -13,12 +14,11 @@ public class Pate implements Recette {
     @Override
     public Ingredients getIngredients() { return null; }
 
-
     public enum Type {
-        CHOUX("Choux"),
-        BRISEE("Brisée"),
-        FEUILLETEE("Feuilletée"),
-        SABLEE("Sablée");
+        CHOUX("Chou"),
+        BRISEE("Tarte Brisée"),
+        FEUILLETEE("Tarte Feuilletée"),
+        SABLEE("Tarte Sablée");
 
         private final String rawValue;
 

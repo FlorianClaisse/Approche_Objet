@@ -3,6 +3,7 @@ package Composite;
 import java.util.ArrayList;
 import java.util.List;
 
+/* Composite */
 public class GateauComposite implements Recette {
     private final List<Recette> composents = new ArrayList<>();
 
