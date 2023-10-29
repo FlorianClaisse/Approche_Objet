@@ -1,4 +1,4 @@
-package Builder;
+package BuilderAndObserver;
 
 import Composite.Fruit;
 import Composite.Pate;

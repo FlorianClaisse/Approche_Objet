@@ -2,8 +2,8 @@ package AbstractFactory;
 
 import Composite.*;
 
-public class ChouChocolat extends GateauFactory {
-    @Override
+/* ConcreteFactoryA */
+public class ChouChocolat implements GateauFactory {
     public Recette make() {
         GateauComposite chou = new GateauComposite();
         chou.addFils(new Pate(Pate.Type.CHOUX));

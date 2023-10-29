@@ -4,8 +4,11 @@ import Decorator.Gateau.*;
 import Decorator.Supplements.*;
 import Composite.*;
 
-import Builder.*;
+import BuilderAndObserver.*;
 import AbstractFactory.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,6 +16,7 @@ public class Main {
         // exampleWithCompositeWithoutBuilder();
         // exampleWithCompositeAndBuilder();
         // exampleWithCompositeAndFactory();
+        exampleWithCompositeAndBuilderAndObserve();
     }
 
     public static void exampleWithDecorator() {
@@ -66,11 +70,11 @@ public class Main {
         Patissier patissier = new Patissier();
 
         // Tarte (feuilletée) aux pommes
-        patissier.makeTarteFeuilleteePomme();
+        patissier.makeTarteFeuilleteePommes();
         System.out.println(patissier.getBuilder().getGateau().getName());
 
         // Tarte (brisée) aux abricots meringuée
-        patissier.makeTarteBriseeAbricotMeringue();
+        patissier.makeTarteBriseeAbricotsMeringue();
         System.out.println(patissier.getBuilder().getGateau().getName());
 
         // Chou au chocolat
@@ -103,5 +107,19 @@ public class Main {
         // Chou à la vanille suppléments chantilly et amandes
         Recette chou2 = factory4.make();
         System.out.println(chou2.getName());
+    }
+
+    public static void exampleWithCompositeAndBuilderAndObserve() {
+        Boulangerie boulangerie = new Boulangerie(new ArrayList<String>(
+            Arrays.asList("Tarte Feuilletée Pommes", "Tarte Brisée Abricots Meringue", "Chou Chocolat", "Chou Vanille Chantilly Amandes")));
+
+        Vendeur vendeur = boulangerie.getVendeur();
+        ArrayList<GateauComposite> sacDeGateaux = new ArrayList<>();
+
+        sacDeGateaux.addAll(vendeur.vente("Chou Chocolat", 5, boulangerie)); // Ne renvoit rien, prépare 5 gateaux
+        sacDeGateaux.addAll(vendeur.vente("Chou Chocolat", 7, boulangerie)); // Renvoit 5 gateaux, en prépare 2
+        sacDeGateaux.addAll(vendeur.vente("Chou Chocolat", 3, boulangerie)); // Renvoit 2 gateaux, en prépare 1
+
+        System.out.println("Nombre de gateaux vendus : " + sacDeGateaux.size()); // 7
     }
 }

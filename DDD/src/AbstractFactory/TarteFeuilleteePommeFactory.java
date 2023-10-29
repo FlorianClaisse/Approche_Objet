@@ -2,8 +2,8 @@ package AbstractFactory;
 
 import Composite.*;
 
-public class TarteFeuilleteePommeFactory extends GateauFactory {
-    @Override
+/* ConcreteFactoryD */
+public class TarteFeuilleteePommeFactory implements GateauFactory {
     public Recette make() {
         GateauComposite tarte = new GateauComposite();
         tarte.addFils(new Pate(Pate.Type.FEUILLETEE));

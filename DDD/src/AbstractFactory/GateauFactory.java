@@ -2,6 +2,7 @@ package AbstractFactory;
 
 import Composite.Recette;
 
-public abstract class GateauFactory {
-    public abstract Recette make();
+/* AbstractFactory */
+public interface GateauFactory {
+    Recette make();
 }
