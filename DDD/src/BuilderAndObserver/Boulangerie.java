@@ -1,6 +1,7 @@
 package BuilderAndObserver;
 
 import Composite.GateauComposite;
+import Composite.Recette;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,63 +9,46 @@ import java.util.HashMap;
 public class Boulangerie implements RestockGateauxSubscriber {
     private final Vendeur vendeur = new Vendeur();
     private final Patissier patissier = new Patissier();
-    private final HashMap<String, Integer> stockVitrine = new HashMap<>(); // Le nombre de gateaux actuellement disponible
-    private final ArrayList<GateauComposite> gateauxVitrine = new ArrayList<>(); // Les gateaux "physiques" dans la vitrine
+
+    private final HashMap<String, Pair<Recette, Integer>> stockVitrine = new HashMap<>(); // Le nombre de gateaux actuellement disponible
     private final ArrayList<String> nomsGateauxVendus; // La liste des noms de gateau disponible à la vente
 
     public Boulangerie(ArrayList<String> choixGateaux) {
-        this.nomsGateauxVendus = choixGateaux;
         vendeur.subscribe(patissier);
         patissier.subscribe(this);
+        this.nomsGateauxVendus = choixGateaux;
     }
 
     public void restock(ArrayList<GateauComposite> gateaux) {
         String gateauName = gateaux.get(0).getName();
-        Integer currentGateauNumber = stockVitrine.get(gateauName);
-        if(currentGateauNumber != null) {
-            stockVitrine.replace(gateauName, currentGateauNumber + gateaux.size());
+        Pair<Recette, Integer> currentGateau = stockVitrine.get(gateauName);
+        if(currentGateau != null) {
+            currentGateau.setSecond(currentGateau.getSecond() + gateaux.size());
         } else {
-            stockVitrine.put(gateauName, gateaux.size());
+            stockVitrine.put(gateauName, new Pair<>(gateaux.get(0), gateaux.size()));
         }
-
-        gateauxVitrine.addAll(gateaux);
     }
 
     public int getGateauNumber(String gateauName) {
-        Integer gateauNumber = stockVitrine.get(gateauName);
-        return (gateauNumber != null ? gateauNumber : 0);
+        Pair<Recette, Integer> gateau = stockVitrine.get(gateauName);
+        return (gateau != null ? gateau.getSecond() : 0);
     }
 
-    public ArrayList<GateauComposite> getGateaux(String gateauName, int number) {
-        ArrayList<GateauComposite> gateaux = new ArrayList<>();
-        ArrayList<GateauComposite> gateauToRemove= new ArrayList<>();
-        int i = 0;
-        for(GateauComposite gateau : gateauxVitrine) {
-            if(gateau.getName().equals(gateauName)) {
-                gateaux.add(gateau);
-                gateauToRemove.add(gateau);
-                i++;
-            }
-            if(i == number)
-                break;
-        }
-        gateauxVitrine.removeAll(gateauToRemove);
-        return gateaux;
-    }
+    public Pair<Recette, Integer> getGateaux(String gateauName, int number) {
+        Pair<Recette, Integer> gateau = stockVitrine.get(gateauName);
+        Pair<Recette, Integer> returnValue = new Pair<>(gateau.getFirst(), gateau.getSecond());
 
-    public void removeFromStock(String gateauName, int number) {
-        Integer currentGateauNumber = stockVitrine.get(gateauName);
-        stockVitrine.replace(gateauName, currentGateauNumber - number);
-        if(currentGateauNumber - number == 0) {
+        gateau.setSecond(gateau.getSecond() - number);
+
+        if (gateau.getSecond() == 0)
             stockVitrine.remove(gateauName);
-        }
+
+        return returnValue;
     }
 
     public boolean aDansChoixGateaux(String gateauName) {
         return nomsGateauxVendus.contains(gateauName);
     }
 
-    public Vendeur getVendeur() {
-        return vendeur;
-    }
+    public Vendeur getVendeur() { return vendeur; }
 }

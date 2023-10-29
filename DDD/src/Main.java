@@ -9,6 +9,7 @@ import AbstractFactory.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Main {
     public static void main(String[] args) {
@@ -114,12 +115,14 @@ public class Main {
             Arrays.asList("Tarte Feuilletée Pommes", "Tarte Brisée Abricots Meringue", "Chou Chocolat", "Chou Vanille Chantilly Amandes")));
 
         Vendeur vendeur = boulangerie.getVendeur();
-        ArrayList<GateauComposite> sacDeGateaux = new ArrayList<>();
+        ArrayList<Pair<Recette, Integer>> sacDeGateaux = new ArrayList<>();
 
-        sacDeGateaux.addAll(vendeur.vente("Chou Chocolat", 5, boulangerie)); // Ne renvoit rien, prépare 5 gateaux
-        sacDeGateaux.addAll(vendeur.vente("Chou Chocolat", 7, boulangerie)); // Renvoit 5 gateaux, en prépare 2
-        sacDeGateaux.addAll(vendeur.vente("Chou Chocolat", 3, boulangerie)); // Renvoit 2 gateaux, en prépare 1
+        sacDeGateaux.add(vendeur.vente("Chou Chocolat", 5, boulangerie)); // Ne renvoit rien, prépare 5 gateaux
+        sacDeGateaux.add(vendeur.vente("Chou Chocolat", 7, boulangerie)); // Renvoit 5 gateaux, en prépare 2
+        sacDeGateaux.add(vendeur.vente("Chou Chocolat", 3, boulangerie)); // Renvoit 2 gateaux, en prépare 1
 
-        System.out.println("Nombre de gateaux vendus : " + sacDeGateaux.size()); // 7
+        for (var elem: sacDeGateaux) {
+            System.out.println(elem.getSecond());
+        }
     }
 }

@@ -1,6 +1,7 @@
 package BuilderAndObserver;
 
 import Composite.GateauComposite;
+import Composite.Recette;
 
 import java.util.ArrayList;
 
@@ -17,16 +18,15 @@ public class Vendeur {
     }
 
     // Déroulement d'une vente pour un gateau
-    public ArrayList<GateauComposite> vente(String gateauName, int wantedNumber, Boulangerie boulangerie) {
+    public Pair<Recette, Integer> vente(String gateauName, int wantedNumber, Boulangerie boulangerie) {
         int currentGateauNumber = boulangerie.getGateauNumber(gateauName);
         if(wantedNumber <= currentGateauNumber) {
-            boulangerie.removeFromStock(gateauName, wantedNumber);
             return boulangerie.getGateaux(gateauName, wantedNumber);
         } else {
             if(boulangerie.aDansChoixGateaux(gateauName)) {
                 notifyManqueGateau(gateauName, wantedNumber - currentGateauNumber);
             }
-            return boulangerie.getGateaux(gateauName, currentGateauNumber);
+            return boulangerie.getGateaux(gateauName, wantedNumber);
         }
     }
 }
