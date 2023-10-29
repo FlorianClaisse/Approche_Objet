@@ -22,8 +22,7 @@ public class GateauComposite implements Recette {
             returnValue.append(recette.getName())
                        .append(" ");
         }
-
-        return returnValue.toString();
+        return returnValue.toString().trim();
     }
 
     @Override public Ingredients getIngredients() {

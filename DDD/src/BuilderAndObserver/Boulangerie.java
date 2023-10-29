@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Boulangerie implements RestockGateauxSubscriber {
-    private Vendeur vendeur = new Vendeur();
-    private Patissier patissier = new Patissier();
-    private HashMap<String, Integer> stockVitrine = new HashMap<>(); // Le nombre de gateaux par nom
-    private ArrayList<GateauComposite> gateauxVitrine = new ArrayList<>(); // Les gateaux "physiques" dans la vitrine
-    private ArrayList<String> nomsGateauxVendus; // La liste de nom des gateaux proposés à la vente
+    private final Vendeur vendeur = new Vendeur();
+    private final Patissier patissier = new Patissier();
+    private final HashMap<String, Integer> stockVitrine = new HashMap<>(); // Le nombre de gateaux actuellement disponible
+    private final ArrayList<GateauComposite> gateauxVitrine = new ArrayList<>(); // Les gateaux "physiques" dans la vitrine
+    private final ArrayList<String> nomsGateauxVendus; // La liste des noms de gateau disponible à la vente
 
     public Boulangerie(ArrayList<String> choixGateaux) {
         this.nomsGateauxVendus = choixGateaux;
@@ -37,17 +37,18 @@ public class Boulangerie implements RestockGateauxSubscriber {
 
     public ArrayList<GateauComposite> getGateaux(String gateauName, int number) {
         ArrayList<GateauComposite> gateaux = new ArrayList<>();
+        ArrayList<GateauComposite> gateauToRemove= new ArrayList<>();
         int i = 0;
         for(GateauComposite gateau : gateauxVitrine) {
             if(gateau.getName().equals(gateauName)) {
                 gateaux.add(gateau);
-                gateauxVitrine.remove(gateau);
+                gateauToRemove.add(gateau);
                 i++;
             }
             if(i == number)
                 break;
         }
-
+        gateauxVitrine.removeAll(gateauToRemove);
         return gateaux;
     }
 

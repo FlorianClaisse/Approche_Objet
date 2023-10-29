@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /* GateauDirector & RestockGateauxPublisher */
 public class Patissier implements MakeGateauxSubscriber {
     private GateauBuilder builder;
-    private ArrayList<GateauComposite> gateauxPourRestock = new ArrayList<>();
+    private final ArrayList<GateauComposite> gateauxPourRestock = new ArrayList<>();
     private RestockGateauxSubscriber subscriber; // Boulangerie
 
     public void subscribe(RestockGateauxSubscriber subscriber) {
