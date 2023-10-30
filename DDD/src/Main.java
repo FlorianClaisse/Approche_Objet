@@ -21,19 +21,19 @@ public class Main {
 
     public static void exampleWithDecorator() {
         // Tarte aux pommes
-        Decorator.Recette tarte1 = new PommesDecorator(new Tarte(null));
+        Decorator.Recette tarte1 = new PommesDecorator(new Tarte());
         System.out.println(tarte1.getName());
 
         // Tarte aux abricots meringuée
-        Decorator.Recette tarte2 = new MeringueDecorator(new AbricotsDecorator(new Tarte(null)));
+        Decorator.Recette tarte2 = new MeringueDecorator(new AbricotsDecorator(new Tarte()));
         System.out.println(tarte2.getName());
 
         // Chou au chocolat
-        Decorator.Recette chou1 = new ChocolatDecorator(new Chou(null));
+        Decorator.Recette chou1 = new ChocolatDecorator(new Chou());
         System.out.println(chou1.getName());
 
         // Chou à la vanille suppléments chantilly et amandes
-        Decorator.Recette chou2 = new AmandesDecorator(new ChantillyDecorator(new VanilleDecorator(new Chou(null))));
+        Decorator.Recette chou2 = new AmandesDecorator(new ChantillyDecorator(new VanilleDecorator(new Chou())));
         System.out.println(chou2.getName());
     }
 

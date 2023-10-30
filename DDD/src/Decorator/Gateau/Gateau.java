@@ -8,11 +8,10 @@ public abstract class Gateau implements Recette {
     private final String name;
     private Ingredients ingredients;
 
-    public Gateau(String name, Ingredients ingredients) {
+    public Gateau(String name) {
         this.name = name;
-        this.ingredients = ingredients;
     }
 
     @Override public String getName() { return name; }
-    @Override public Ingredients getIngredients() { return ingredients; }
+    @Override public Ingredients getIngredients() { return null; }
 }

@@ -1,9 +1,6 @@
 package BuilderAndObserver;
 
-import Composite.GateauComposite;
 import Composite.Recette;
-
-import java.util.ArrayList;
 
 /* Publisher */
 public class Vendeur {
