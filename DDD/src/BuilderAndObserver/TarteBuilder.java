@@ -10,11 +10,8 @@ public class TarteBuilder extends GateauBuilder {
     private Supplement.Type supplement1;
     private Supplement.Type supplement2;
 
-    public TarteBuilder(Pate.Type pate) {
-        this.pate = pate;
-    }
     public TarteBuilder(Pate.Type pate, Fruit.Type fruits) {
-        this(pate);
+        this.pate = pate;
         this.fruits = fruits;
     }
     public TarteBuilder(Pate.Type pate, Fruit.Type fruits, Supplement.Type supplement1) {

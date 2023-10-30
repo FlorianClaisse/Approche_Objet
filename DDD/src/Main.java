@@ -9,7 +9,6 @@ import AbstractFactory.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 public class Main {
     public static void main(String[] args) {
@@ -29,7 +28,7 @@ public class Main {
         Decorator.Recette tarte2 = new MeringueDecorator(new AbricotsDecorator(new Tarte(null)));
         System.out.println(tarte2.getName());
 
-        // Chou à la vanille suppléments chantilly et amandes
+        // Chou au chocolat
         Decorator.Recette chou1 = new ChocolatDecorator(new Chou(null));
         System.out.println(chou1.getName());
 
@@ -74,8 +73,8 @@ public class Main {
         patissier.makeTarteFeuilleteePommes();
         System.out.println(patissier.getBuilder().getGateau().getName());
 
-        // Tarte (brisée) aux abricots meringuée
-        patissier.makeTarteBriseeAbricotsMeringue();
+        // Tarte (feuilletée) aux abricots meringuée
+        patissier.makeTarteFeuilleteeAbricotsMeringue();
         System.out.println(patissier.getBuilder().getGateau().getName());
 
         // Chou au chocolat
@@ -112,17 +111,27 @@ public class Main {
 
     public static void exampleWithCompositeAndBuilderAndObserve() {
         Boulangerie boulangerie = new Boulangerie(new ArrayList<String>(
-            Arrays.asList("Tarte Feuilletée Pommes", "Tarte Brisée Abricots Meringue", "Chou Chocolat", "Chou Vanille Chantilly Amandes")));
+            Arrays.asList(
+                "Tarte Feuilletée Pommes",
+                "Tarte Feuilletée Abricots",
+                "Tarte Feuilletée Pommes Meringue",
+                "Tarte Feuilletée Abricots Meringue",
+                "Chou Chocolat",
+                "Chou Vanille",
+                "Chou Chocolat Noisettes",
+                "Chou Vanille Chantilly")), 5);
 
         Vendeur vendeur = boulangerie.getVendeur();
-        ArrayList<Pair<Recette, Integer>> sacDeGateaux = new ArrayList<>();
+        ArrayList<Pair<Recette, Integer>> sacClient = new ArrayList<>();
 
-        sacDeGateaux.add(vendeur.vente("Chou Chocolat", 5, boulangerie)); // Ne renvoit rien, prépare 5 gateaux
-        sacDeGateaux.add(vendeur.vente("Chou Chocolat", 7, boulangerie)); // Renvoit 5 gateaux, en prépare 2
-        sacDeGateaux.add(vendeur.vente("Chou Chocolat", 3, boulangerie)); // Renvoit 2 gateaux, en prépare 1
+        sacClient.add(vendeur.vente("Chou Chocolat", 10, boulangerie));
+        sacClient.add(vendeur.vente("Chou Vanille Amandes", 1, boulangerie)); // Pas proposé --> null
+        sacClient.add(vendeur.vente("Tarte Feuilletée Abricots Meringue", 1, boulangerie));
+        sacClient.add(vendeur.vente("Chou Chocolat", 7, boulangerie));
 
-        for (var elem: sacDeGateaux) {
-            System.out.println(elem.getSecond());
+        for (var elem: sacClient) {
+            if(elem != null)
+                System.out.println(elem.getSecond() + " " + elem.getFirst().getName());
         }
     }
 }

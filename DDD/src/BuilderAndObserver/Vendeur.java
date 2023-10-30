@@ -13,20 +13,21 @@ public class Vendeur {
         this.subscriber = subscriber;
     }
 
-    private void notifyManqueGateau(String gateauName, int number) {
+    public void notifyManqueGateau(String gateauName, int number) {
         subscriber.make(gateauName, number);
     }
 
     // Déroulement d'une vente pour un gateau
     public Pair<Recette, Integer> vente(String gateauName, int wantedNumber, Boulangerie boulangerie) {
+        if(!boulangerie.aDansChoixGateaux(gateauName))
+            return null;
+
         int currentGateauNumber = boulangerie.getGateauNumber(gateauName);
-        if(wantedNumber <= currentGateauNumber) {
-            return boulangerie.getGateaux(gateauName, wantedNumber);
-        } else {
-            if(boulangerie.aDansChoixGateaux(gateauName)) {
-                notifyManqueGateau(gateauName, wantedNumber - currentGateauNumber);
-            }
-            return boulangerie.getGateaux(gateauName, wantedNumber);
+        if(wantedNumber > currentGateauNumber) {
+            // System.out.println("notif manque gateaux à la vente");
+            notifyManqueGateau(gateauName, wantedNumber - currentGateauNumber);
         }
+
+        return boulangerie.getGateaux(gateauName, wantedNumber);
     }
 }
