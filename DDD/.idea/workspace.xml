@@ -4,49 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dbf0055c-4377-493a-98b5-bfd06fe248a7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Domain/AlphanumericString.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Domain/Basket.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Domain/CommandLine.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Domain/Reference.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AbstractFactory/ChouChocolat.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AbstractFactory/ChouVanilleChantillyAmandeFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AbstractFactory/GateauFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AbstractFactory/TarteBriseeAbricotMeringueFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AbstractFactory/TarteFeuilleteePommeFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BuilderAndObserver/Boulangerie.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BuilderAndObserver/ChouBuilder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BuilderAndObserver/GateauBuilder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BuilderAndObserver/MakeGateauxSubscriber.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BuilderAndObserver/Pair.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BuilderAndObserver/Patissier.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BuilderAndObserver/RestockGateauxSubscriber.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BuilderAndObserver/TarteBuilder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/BuilderAndObserver/Vendeur.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Composite/Creme.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Composite/Fruit.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Composite/GateauComposite.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Composite/Ingredients.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Composite/Pate.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Composite/Recette.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Composite/Supplement.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Decorator/Creme/ChocolatDecorator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Decorator/Creme/VanilleDecorator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Decorator/Decorator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Decorator/Fruit/AbricotsDecorator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Decorator/Fruit/PommesDecorator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Decorator/Gateau/Chou.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Decorator/Gateau/Gateau.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Decorator/Gateau/Tarte.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Decorator/Ingredients.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Decorator/Recette.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Decorator/Supplements/AmandesDecorator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Decorator/Supplements/ChantillyDecorator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Decorator/Supplements/MeringueDecorator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Decorator/Supplements/NoisetteDecorator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-    </list>
+    <list default="true" id="dbf0055c-4377-493a-98b5-bfd06fe248a7" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -84,6 +42,7 @@
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -111,6 +70,7 @@
       <updated>1699340742992</updated>
       <workItem from="1699340743917" duration="66000" />
       <workItem from="1699340848579" duration="2917000" />
+      <workItem from="1699344561378" duration="1669000" />
     </task>
     <servers />
   </component>

@@ -8,7 +8,7 @@ public final class CommandLine {
     private final Reference product;
     private int quantity;
 
-    public CommandLine(String ref, Reference product, int quantity) {
+    public CommandLine(Reference product, int quantity) {
         this.ref = UUID.randomUUID().toString();
         this.product = product;
         this.quantity = quantity;
