@@ -1,30 +1,32 @@
 package Domain;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public final class Basket {
-    private final Set<CommandLine> commandLines = new HashSet<>();
+    private final Map<Reference, CommandLine> commandLines = new HashMap<>();
     private boolean validated = false;
 
     public int getAmount() {
         int total = 0;
-        for(CommandLine command: commandLines) {
+        for(CommandLine command: commandLines.values()) {
             total += command.getAmount();
         }
         return total;
     }
 
-    public boolean addReference(Reference reference, int quantity) {
-        if (validated) return false;
+    public void addReference(Reference reference, int quantity) {
+        if (validated) return;
         CommandLine newCommandLine = new CommandLine(reference, quantity);
-        return commandLines.add(newCommandLine);
+        commandLines.put(reference, newCommandLine);
     }
 
     public void removeReference(Reference reference) {
         if (validated) return;
         CommandLine commandToRemove = new CommandLine(reference, 0);
-        commandLines.removeIf(c -> c.getProductRef().getRef().equals(reference.getRef()));
+        commandLines.remove(reference);
     }
 
     public void validate() { validated = true; }

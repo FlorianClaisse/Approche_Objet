@@ -1,6 +1,5 @@
 package Domain;
 
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,23 +23,6 @@ public final class Reference {
     public String getDescription() { return description.getValue(); }
     public int getPrix() { return prix; }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Reference reference = (Reference) o;
-        return prix == reference.prix && Objects.equals(ref, reference.ref) && Objects.equals(name, reference.name) && Objects.equals(description, reference.description);
-    }
-
-    @Override public int hashCode() { return Objects.hash(ref, name, description, prix); }
-
-    @Override public String toString() {
-        return "Reference(ref=" + ref +
-                ", name=" + name +
-                ", description=" + description +
-                ", prix=" + prix + ')';
-    }
-
     static final class AlphanumericString {
         private static final String REGEX = "^[a-zA-Z0-9]";
         private final String value;
@@ -58,16 +40,5 @@ public final class Reference {
         }
 
         public String getValue() { return value; }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            AlphanumericString that = (AlphanumericString) o;
-            return Objects.equals(value, that.value);
-        }
-
-        @Override public int hashCode() { return Objects.hash(value); }
-        @Override public String toString() { return "AlphanumericString(value=" + value + ')'; }
     }
 }

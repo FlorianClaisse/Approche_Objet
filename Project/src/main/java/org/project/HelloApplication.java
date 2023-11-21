@@ -1,25 +1,22 @@
 package org.project;
 
 import javafx.application.Application;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.project.model.building.Building;
+import org.project.model.building.BuildingFactory;
 
 import java.io.IOException;
 
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+        System.out.println(BuildingFactory.makeWoodenCabin());
         // Charger l'image d'herbe depuis les ressources
-        Image imageHerbe = new Image(getClass().getResource("/textures/background.jpeg").toExternalForm());
+        /*Image imageHerbe = new Image(getClass().getResource("/textures/background.jpeg").toExternalForm());
 
         // Créer un ImageView pour l'image d'herbe
         ImageView imageView = new ImageView(imageHerbe);
@@ -44,7 +41,7 @@ public class HelloApplication extends Application {
         // Définir la scène pour la fenêtre principale
         stage.setScene(scene);
         stage.setTitle("Fenêtre avec texture d'herbe"); // Titre de la fenêtre
-        stage.show();
+        stage.show();*/
     }
 
     public static void main(String[] args) {
