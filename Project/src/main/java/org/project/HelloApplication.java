@@ -1,13 +1,9 @@
 package org.project;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.project.model.building.Building;
 import org.project.model.building.BuildingFactory;
+import org.project.model.resource.Citizen;
 
 import java.io.IOException;
 
@@ -15,6 +11,7 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         System.out.println(BuildingFactory.makeWoodenCabin());
+        var cite = new Citizen(45);
         // Charger l'image d'herbe depuis les ressources
         /*Image imageHerbe = new Image(getClass().getResource("/textures/background.jpeg").toExternalForm());
 

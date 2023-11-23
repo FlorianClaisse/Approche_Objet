@@ -1,7 +1,7 @@
 package org.project.model.building;
 
 import org.project.exceptions.BuilgindBuilderException;
-import org.project.model.Resource;
+import org.project.model.resource.Material;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,9 +10,9 @@ public class BuildingBuilder {
     private Building.Type type;
     private int nbHabitants;
     private int nbWorkers;
-    private final Set<Resource> buildRequirements;
-    private final Set<Resource> consomation;
-    private final Set<Resource> production;
+    private final Set<Material> buildRequirements;
+    private final Set<Material> consomation;
+    private final Set<Material> production;
     private int buildTime;
 
     private BuildingBuilder() {
@@ -46,21 +46,21 @@ public class BuildingBuilder {
         return this;
     }
 
-    public BuildingBuilder addBuildRequirement(Resource resource) {
-        if (resource.getQuantity() <= 0) throw new BuilgindBuilderException("The quantity of a material cannot be less than or equal to 0");
-        this.buildRequirements.add(resource);
+    public BuildingBuilder addBuildRequirement(Material resources) {
+        if (resources.getQuantity() <= 0) throw new BuilgindBuilderException("The quantity of a material cannot be less than or equal to 0");
+        this.buildRequirements.add(resources);
         return this;
     }
 
-    public BuildingBuilder addConsomation(Resource resource) {
-        if (resource.getQuantity() <= 0) throw new BuilgindBuilderException("The quantity of a material cannot be less than or equal to 0");
-        this.consomation.add(resource);
+    public BuildingBuilder addConsomation(Material resources) {
+        if (resources.getQuantity() <= 0) throw new BuilgindBuilderException("The quantity of a material cannot be less than or equal to 0");
+        this.consomation.add(resources);
         return this;
     }
 
-    public BuildingBuilder addProduction(Resource resource) {
-        if (resource.getQuantity() <= 0) throw new BuilgindBuilderException("The quantity of a material cannot be less than or equal to 0");
-        this.production.add(resource);
+    public BuildingBuilder addProduction(Material resources) {
+        if (resources.getQuantity() <= 0) throw new BuilgindBuilderException("The quantity of a material cannot be less than or equal to 0");
+        this.production.add(resources);
         return this;
     }
 

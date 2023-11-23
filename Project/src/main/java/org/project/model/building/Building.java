@@ -1,7 +1,7 @@
 package org.project.model.building;
 
 import org.project.exceptions.BuildingException;
-import org.project.model.Resource;
+import org.project.model.resource.Material;
 
 import java.util.Set;
 
@@ -9,17 +9,17 @@ public class Building {
     private final Type type;
     private final int nbHabitants;
     private final int nbWorkers;
-    private final Set<Resource> buildRequirements;
-    private final Set<Resource> consomation;
-    private final Set<Resource> production;
+    private final Set<Material> buildRequirements;
+    private final Set<Material> consomation;
+    private final Set<Material> production;
     private final int buildTime;
 
     protected Building(Type type,
                        int nbHabitants,
                        int nbWorkers,
-                       Set<Resource> buildRequirements,
-                       Set<Resource> consomation,
-                       Set<Resource> production,
+                       Set<Material> buildRequirements,
+                       Set<Material> consomation,
+                       Set<Material> production,
                        int buildTime)
     {
         if (type == null) throw new BuildingException("You are trying to create a building with a null type.");
@@ -54,12 +54,12 @@ public class Building {
         STEEL_MILL("Steel Mill"),
         TOOL_FACTORY("Tool Factory");
 
-        private final String name;
+        private final String rawValue;
 
-        Type(String name) {
-            this.name = name;
+        Type(String rawValue) {
+            this.rawValue = rawValue;
         }
 
-        public String getName() { return name; }
+        public String getRawValue() { return rawValue; }
     }
 }
