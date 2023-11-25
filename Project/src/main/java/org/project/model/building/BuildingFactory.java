@@ -1,5 +1,6 @@
 package org.project.model.building;
 
+import org.project.model.resource.Gold;
 import org.project.model.resource.Material;
 
 import static org.project.model.building.Building.Type.*;
@@ -13,7 +14,7 @@ public class BuildingFactory {
                 .setType(WOODEN_CABIN)
                 .setNbHabitants(2)
                 .setNbWorkers(2)
-                .addBuildRequirement(new Material(GOLD, 1))
+                .setPrice(1)
                 .addBuildRequirement(new Material(WOOD, 1))
                 .addProduction(new Material(WOOD, 2))
                 .addProduction(new Material(FOOD, 2))
@@ -26,7 +27,7 @@ public class BuildingFactory {
                 .setType(HOUSE)
                 .setNbHabitants(4)
                 .setNbWorkers(0)
-                .addBuildRequirement(new Material(GOLD, 1))
+                .setPrice(1)
                 .addBuildRequirement(new Material(WOOD, 2))
                 .addBuildRequirement(new Material(STONE, 2))
                 .setBuildTime(4)
@@ -38,7 +39,7 @@ public class BuildingFactory {
                 .setType(APARTMENT_BUILDING)
                 .setNbHabitants(60)
                 .setNbWorkers(0)
-                .addBuildRequirement(new Material(GOLD, 4))
+                .setPrice(4)
                 .addBuildRequirement(new Material(WOOD, 50))
                 .addBuildRequirement(new Material(STONE, 50))
                 .setBuildTime(6)
@@ -51,7 +52,7 @@ public class BuildingFactory {
                 .setType(FARM)
                 .setNbHabitants(5)
                 .setNbWorkers(3)
-                .addBuildRequirement(new Material(GOLD, 4))
+                .setPrice(4)
                 .addBuildRequirement(new Material(WOOD, 5))
                 .addBuildRequirement(new Material(STONE, 5))
                 .addProduction(new Material(FOOD, 10))
@@ -64,12 +65,12 @@ public class BuildingFactory {
                 .setType(QUARRY)
                 .setNbHabitants(2)
                 .setNbWorkers(30)
-                .addBuildRequirement(new Material(GOLD, 4))
+                .setPrice(4)
                 .addBuildRequirement(new Material(WOOD, 50))
                 .addProduction(new Material(STONE, 4))
                 .addProduction(new Material(IRON, 4))
                 .addProduction(new Material(COAL, 4))
-                .addProduction(new Material(GOLD, 2))
+                .addProduction(new Gold(2))
                 .setBuildTime(2)
                 .build();
     }
@@ -79,7 +80,7 @@ public class BuildingFactory {
                 .setType(LUMBER_MILL)
                 .setNbHabitants(0)
                 .setNbWorkers(10)
-                .addBuildRequirement(new Material(GOLD, 6))
+                .setPrice(6)
                 .addBuildRequirement(new Material(WOOD, 50))
                 .addBuildRequirement(new Material(STONE, 50))
                 .addConsomation(new Material(WOOD, 4))
@@ -93,7 +94,7 @@ public class BuildingFactory {
                 .setType(CEMENT_PLANT)
                 .setNbHabitants(0)
                 .setNbWorkers(10)
-                .addBuildRequirement(new Material(GOLD, 6))
+                .setPrice(6)
                 .addBuildRequirement(new Material(WOOD, 50))
                 .addBuildRequirement(new Material(STONE, 50))
                 .addConsomation(new Material(STONE, 4))
@@ -108,7 +109,7 @@ public class BuildingFactory {
                 .setType(STEEL_MILL)
                 .setNbHabitants(0)
                 .setNbWorkers(40)
-                .addBuildRequirement(new Material(GOLD, 6))
+                .setPrice(6)
                 .addBuildRequirement(new Material(WOOD, 100))
                 .addBuildRequirement(new Material(STONE, 50))
                 .addConsomation(new Material(IRON, 4))
@@ -123,7 +124,7 @@ public class BuildingFactory {
                 .setType(TOOL_FACTORY)
                 .setNbHabitants(0)
                 .setNbWorkers(12)
-                .addBuildRequirement(new Material(GOLD, 8))
+                .setPrice(8)
                 .addBuildRequirement(new Material(WOOD, 50))
                 .addBuildRequirement(new Material(STONE, 50))
                 .addConsomation(new Material(STEEL, 4))

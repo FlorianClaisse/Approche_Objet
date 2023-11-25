@@ -1,7 +1,7 @@
 package org.project.model.resource;
 
-public final class Citizen extends Resource {
-    public Citizen(int quantity) {
+public final class Gold extends Resource {
+    public Gold(int quantity) {
         this.addQuantity(quantity);
     }
 }
