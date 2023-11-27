@@ -1,24 +1,23 @@
 package org.project.model.building;
 
-import org.project.exceptions.BuildingException;
 import org.project.model.resource.Buyable;
-import org.project.model.resource.Material;
 import org.project.model.resource.Resource;
 
 import java.util.Set;
 
 public class Building extends Buyable {
     private final Type type;
-    private final int nbHabitants;
-    private final int nbWorkers;
+    private int level;
+    private final int minHabitants;
+    private final int minWorkers;
     private final Set<Resource> buildRequirements;
     private final Set<Resource> consomation;
     private final Set<Resource> production;
     private final int buildTime;
 
     protected Building(Type type,
-                       int nbHabitants,
-                       int nbWorkers,
+                       int minHabitants,
+                       int minWorkers,
                        int price,
                        Set<Resource> buildRequirements,
                        Set<Resource> consomation,
@@ -26,10 +25,11 @@ public class Building extends Buyable {
                        int buildTime)
     {
         super(price);
-        if (type == null) throw new BuildingException("You are trying to create a building with a null type.");
+        if (type == null) throw new NullPointerException("You are trying to create a building with a null type.");
         this.type = type;
-        this.nbHabitants = nbHabitants;
-        this.nbWorkers = nbWorkers;
+        this.level = 1;
+        this.minHabitants = minHabitants;
+        this.minWorkers = minWorkers;
         this.buildRequirements = buildRequirements;
         this.consomation = consomation;
         this.production = production;
