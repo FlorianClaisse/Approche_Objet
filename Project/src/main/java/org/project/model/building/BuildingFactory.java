@@ -114,7 +114,7 @@ public class BuildingFactory {
                 .addBuildRequirement(new Material(STONE, 50))
                 .addConsomation(new Material(IRON, 4))
                 .addConsomation(new Material(COAL, 2))
-                .addProduction(new Material(STEEL, 2))
+                .addProduction(new Material(STEEL, 4))
                 .setBuildTime(6)
                 .build();
     }

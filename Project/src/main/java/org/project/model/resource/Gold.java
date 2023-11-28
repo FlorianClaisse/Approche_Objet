@@ -4,4 +4,9 @@ public final class Gold extends Resource {
     public Gold(int quantity) {
         this.addQuantity(quantity);
     }
+
+    @Override
+    public String toString() {
+        return "Gold(quantity=" + this.getQuantity() + ")";
+    }
 }

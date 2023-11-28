@@ -36,6 +36,10 @@ public class Building extends Buyable {
         this.buildTime = buildTime;
     }
 
+    public Set<Resource> getBuildRequirements() {
+        return this.buildRequirements;
+    }
+
     public enum Type {
         WOODEN_CABIN("Wooden Cabin"),
         HOUSE ("House"),

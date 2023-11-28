@@ -1,5 +1,7 @@
 package org.project.model.resource;
 
+import java.util.Objects;
+
 public final class Material extends Buyable {
     private final Type type;
 
@@ -7,6 +9,21 @@ public final class Material extends Buyable {
         super(type.price);
         this.type = type;
         this.addQuantity(quantity);
+    }
+
+    @Override public String toString() {
+        return this.type.rawValue + "(quantity=" + this.getQuantity() + ", price=" + this.getPrice() + ")";
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Material material = (Material) o;
+        return type == material.type;
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(this.type);
     }
 
     public enum Type {

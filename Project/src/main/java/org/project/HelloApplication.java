@@ -12,6 +12,9 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
         System.out.println(BuildingFactory.makeWoodenCabin());
         var cite = new Citizen(45);
+
+
+
         // Charger l'image d'herbe depuis les ressources
         /*Image imageHerbe = new Image(getClass().getResource("/textures/background.jpeg").toExternalForm());
 
