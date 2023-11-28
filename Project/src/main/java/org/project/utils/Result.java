@@ -32,7 +32,7 @@ public final class Result<S, E> {
 
     /** Get the success value.
      * @throws IllegalStateException if this method is called for an error case */
-    public @NotNull S getSuccess() {
+    public S getSuccess() {
         if (!isSuccess) {
             throw new IllegalStateException("Result is not a success");
         }
@@ -41,7 +41,7 @@ public final class Result<S, E> {
 
     /** Get the failure value.
      * @throws IllegalStateException if the method is called an error case. */
-    public @NotNull E getError() {
+    public E getError() {
         if (isSuccess) {
             throw new IllegalStateException("Result is not a error");
         }

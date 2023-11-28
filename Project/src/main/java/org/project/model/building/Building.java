@@ -3,20 +3,23 @@ package org.project.model.building;
 import org.project.model.resource.Buyable;
 import org.project.model.resource.Resource;
 
+import java.util.List;
 import java.util.Set;
 
 public class Building extends Buyable {
     private final Type type;
     private int level;
-    private final int minHabitants;
+    private final int nbHabitants;
     private final int minWorkers;
+    private int maxWorkers;
+    private int currentWorkers;
     private final Set<Resource> buildRequirements;
     private final Set<Resource> consomation;
     private final Set<Resource> production;
     private final int buildTime;
 
     protected Building(Type type,
-                       int minHabitants,
+                       int nbHabitants,
                        int minWorkers,
                        int price,
                        Set<Resource> buildRequirements,
@@ -28,16 +31,35 @@ public class Building extends Buyable {
         if (type == null) throw new NullPointerException("You are trying to create a building with a null type.");
         this.type = type;
         this.level = 1;
-        this.minHabitants = minHabitants;
+        this.nbHabitants = nbHabitants;
         this.minWorkers = minWorkers;
+        this.currentWorkers = minWorkers;
         this.buildRequirements = buildRequirements;
         this.consomation = consomation;
         this.production = production;
         this.buildTime = buildTime;
     }
 
-    public Set<Resource> getBuildRequirements() {
-        return this.buildRequirements;
+    public boolean canRemoveWorkers(int value) {
+        return (this.currentWorkers - value) >= this.minWorkers;
+    }
+
+    public boolean canAddWorkers(int value) {
+        return (this.currentWorkers + value) <= this.maxWorkers;
+    }
+
+    public void addWorkers(int value) {
+        if (!canAddWorkers(value)) throw new IllegalStateException("Can't add workers please use canAddWorkers()");
+        this.currentWorkers += value;
+    }
+
+    public void removeWorkers(int value) {
+        if (!canRemoveWorkers(value)) throw new IllegalStateException("Can't remove workers please use canRemoveWorkers()");
+        this.currentWorkers -= value;
+    }
+
+    public List<Resource> getBuildRequirements() {
+        return this.buildRequirements.stream().toList();
     }
 
     public enum Type {
