@@ -3,20 +3,45 @@ package org.project;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.project.model.building.BuildingFactory;
+import org.project.model.gameengine.Player;
 import org.project.model.resource.Citizen;
+import org.project.model.resource.Material;
+import org.project.model.resource.Resource;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        System.out.println(BuildingFactory.makeWoodenCabin());
+        Player player = new Player();
+        player.printStock();
+        System.out.println("");
+
+        ArrayList<Resource> add = new ArrayList<>();
+        add.add(new Material(Material.Type.FOOD, 15));
+        add.add(new Material(Material.Type.STONE, 10));
+        player.addToStock(add);
+        player.printStock();
+        System.out.println("");
+
+        ArrayList<Resource> remove = new ArrayList<>();
+        remove.add(new Material(Material.Type.FOOD, 1));
+        remove.add(new Material(Material.Type.STONE, 100));
+        player.removeFromStock(remove);
+        player.printStock();
+
+        ArrayList<Resource> construct = new ArrayList<>();
+        construct.add(new Material(Material.Type.WOOD, 10));
+        //construct.add(new Material(Material.Type.CEMENT, 10));
+        System.out.println("\n" + player.canConstruct(construct));
+
+
+        /*System.out.println(BuildingFactory.makeWoodenCabin());
         var cite = new Citizen(45);
 
-
-
         // Charger l'image d'herbe depuis les ressources
-        /*Image imageHerbe = new Image(getClass().getResource("/textures/background.jpeg").toExternalForm());
+        Image imageHerbe = new Image(getClass().getResource("/textures/background.jpeg").toExternalForm());
 
         // Créer un ImageView pour l'image d'herbe
         ImageView imageView = new ImageView(imageHerbe);
