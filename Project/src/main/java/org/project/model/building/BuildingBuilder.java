@@ -1,6 +1,7 @@
 package org.project.model.building;
 
 import org.project.model.resource.Resource;
+import org.project.model.resource.Resources;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,9 +11,9 @@ public class BuildingBuilder {
     private int minHabitants;
     private int minWorkers;
     private int price;
-    private final Set<Resource> buildRequirements;
-    private final Set<Resource> consomation;
-    private final Set<Resource> production;
+    private final Resources buildRequirements;
+    private final Resources consomation;
+    private final Resources production;
     private int buildTime;
 
     private BuildingBuilder() {
@@ -20,9 +21,9 @@ public class BuildingBuilder {
         this.minHabitants = 0;
         this.minWorkers = 0;
         this.price = 0;
-        this.buildRequirements = new HashSet<>();
-        this.consomation = new HashSet<>();
-        this.production = new HashSet<>();
+        this.buildRequirements = new Resources();
+        this.consomation = new Resources();
+        this.production = new Resources();
         this.buildTime = 0;
     }
 
@@ -53,21 +54,21 @@ public class BuildingBuilder {
         return this;
     }
 
-    public BuildingBuilder addBuildRequirement(Resource resources) {
-        if (resources.getQuantity() <= 0) throw new IllegalArgumentException("The quantity of a material cannot be less than or equal to 0");
-        this.buildRequirements.add(resources);
+    public BuildingBuilder addBuildRequirement(Resource resources, int quantity) {
+        if (quantity <= 0) throw new IllegalArgumentException("The quantity of a material cannot be less than or equal to 0");
+        this.buildRequirements.put(resources, quantity);
         return this;
     }
 
-    public BuildingBuilder addConsomation(Resource resources) {
-        if (resources.getQuantity() <= 0) throw new IllegalArgumentException("The quantity of a material cannot be less than or equal to 0");
-        this.consomation.add(resources);
+    public BuildingBuilder addConsomation(Resource resources, int quantity) {
+        if (quantity <= 0) throw new IllegalArgumentException("The quantity of a material cannot be less than or equal to 0");
+        this.consomation.put(resources, quantity);
         return this;
     }
 
-    public BuildingBuilder addProduction(Resource resources) {
-        if (resources.getQuantity() <= 0) throw new IllegalArgumentException("The quantity of a material cannot be less than or equal to 0");
-        this.production.add(resources);
+    public BuildingBuilder addProduction(Resource resources, int quantity) {
+        if (quantity <= 0) throw new IllegalArgumentException("The quantity of a material cannot be less than or equal to 0");
+        this.production.put(resources, quantity);
         return this;
     }
 

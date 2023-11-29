@@ -1,12 +1,9 @@
 package org.project.model.resource;
 
-public final class Gold extends Resource {
-    public Gold(int quantity) {
-        this.addQuantity(quantity);
-    }
+public final class Gold implements Resource {
+    public Gold() { }
 
-    @Override
-    public String toString() {
-        return "Gold(quantity=" + this.getQuantity() + ")";
-    }
+    @Override  public String getTypeName() { return "Gold"; }
+
+    @Override public String toString() { return "Gold()"; }
 }

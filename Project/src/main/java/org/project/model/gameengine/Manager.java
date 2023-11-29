@@ -6,7 +6,8 @@ import org.project.model.building.BuildingFactory;
 import org.project.model.resource.Citizen;
 import org.project.model.resource.Material;
 import org.project.model.resource.Resource;
-import org.project.utils.Result;
+import org.project.model.resource.Resources;
+import org.project.utils.Pair;
 
 import java.util.*;
 
@@ -18,29 +19,31 @@ public final class Manager {
 
     private final Map<Integer, Building> constructedBuildings;
     private final Map<Integer, Building> underConstruction;
-    private final Citizen habitants;
-    private final Citizen workers;
-    private final ManagerDelegate delegate;
+    private final Pair<Citizen, Integer> habitants;
+    private final Pair<Citizen, Integer> workers;
+    private final ManagerDelegate player;
 
-    public Manager(@NotNull ManagerDelegate delegate) {
+    public Manager(@NotNull ManagerDelegate player) {
         this.constructedBuildings = new HashMap<>();
         this.underConstruction = new HashMap<>();
-        this.habitants = new Citizen(0);
-        this.workers = new Citizen(0);
-        this.delegate = delegate;
+        this.habitants = new Pair<>(new Citizen(), 0);
+        this.workers = new Pair<>(new Citizen(), 0);
+        this.player = player;
     }
 
     public void update() {
-        productResources();
-        consumeResources();
+        // FIXME: Attendre de faire le TODO
+        //productResources();
+        //consumeResources();
 
         List<Integer> toBeRemoved = new ArrayList<>();
         for (Map.Entry<Integer, Building> entry: this.underConstruction.entrySet()) {
             Building building = entry.getValue();
             building.removeOnePeriod();
+
             if (building.isBuilt()) {
-                this.habitants.addQuantity(building.getNbHabitants());
-                this.workers.addQuantity(building.getCurrentWorkers());
+                this.updateHabitants(building.getNbHabitants());
+                this.updateWorkers(building.getCurrentWorkers());
                 toBeRemoved.add(entry.getKey());
                 this.constructedBuildings.put(BUILDING_COUNTER, building);
                 BUILDING_COUNTER++;
@@ -49,18 +52,19 @@ public final class Manager {
         toBeRemoved.forEach(this.underConstruction::remove);
     }
 
-    // TODO: Fix le changer de tableau une fois construit
     public boolean addBuilding(@NotNull Building.Type type) {
         Building building = getBuilding(type);
         // Si on ne possede pas assez d'habitant libre pour travailler.
         if ((this.freeInhabitant() + building.getNbHabitants()) - building.getMinWorkers() < 0) return false;
-        // Le delegate doit verifier qu'il possede assez de resource
-        if (!this.delegate.canConstruct(building.getBuildRequirements())) return false;
+        // Le joueur doit verifier qu'il peut l'acheter et qu'il possède assez de resource
+        if (!this.player.canBuy(building.getPrice()) ||
+            !this.player.canConstruct(building.getBuildRequirements())
+        ) return false;
 
         this.underConstruction.put(UNDER_COUNTER, building);
         UNDER_COUNTER++;
 
-        this.delegate.removeFromStock(building.getBuildRequirements());
+        this.player.removeFromStock(building.getBuildRequirements());
         return true;
     }
 
@@ -72,14 +76,16 @@ public final class Manager {
         return removeBuilding(true, key);
     }
 
-    public boolean addWorkers(int key, int value) {
-        if (freeInhabitant() - value < 0) return false;
+    public boolean addWorkersToBuilding(int key, int quantity) {
+        if (freeInhabitant() - quantity < 0) return false;
+
         if (this.constructedBuildings.containsKey(key)) {
             Building building = this.constructedBuildings.get(key);
-            if (building.canAddWorkers(value)) {
-                this.habitants.removeQuantity(value);
-                this.workers.addQuantity(value);
-                building.addWorkers(value);
+
+            if (building.canAddWorkers(quantity)) {
+                this.updateHabitants(-quantity);
+                this.updateWorkers(quantity);
+                building.addWorkers(quantity);
                 return true;
             }
             return false;
@@ -87,13 +93,13 @@ public final class Manager {
         return false;
     }
 
-    public boolean removeWorkers(int key, int value) {
+    public boolean removeWorkersFromBuilding(int key, int quantity) {
         if (this.constructedBuildings.containsKey(key)) {
             Building building = this.constructedBuildings.get(key);
-            if (building.canRemoveWorkers(value)) {
-                this.habitants.addQuantity(value);
-                this.workers.removeQuantity(value);
-                building.removeWorkers(value);
+            if (building.canRemoveWorkers(quantity)) {
+                this.updateHabitants(quantity);
+                this.updateWorkers(-quantity);
+                building.removeWorkers(quantity);
                 return true;
             }
             return false;
@@ -103,23 +109,23 @@ public final class Manager {
 
     private boolean removeBuilding(boolean under, int key) {
         Map<Integer, Building> buildings = under ? this.underConstruction : this.constructedBuildings;
+
         if (buildings.containsKey(key)) {
-            Building building = buildings.remove(key);
-            this.habitants.removeQuantity(building.getNbHabitants());
-            this.workers.removeQuantity(building.getCurrentWorkers());
+            Building oldBuilding = buildings.remove(key);
+            this.updateHabitants(-(oldBuilding.getNbHabitants()));
+            this.updateWorkers(-(oldBuilding.getCurrentWorkers()));
+
             if (under) {
-                List<Resource> resources = new ArrayList<>();
-                building.getBuildRequirements().forEach(it -> {
-                    it.removeQuantity(it.getQuantity() / 2);
-                });
-                this.delegate.addToStock(resources);
+                Resources resources = new Resources();
+                oldBuilding.getBuildRequirements().forEach((r, q) -> resources.put(r, q / 2));
+                this.player.addToStock(resources);
             }
             return true;
         }
         return false;
     }
 
-    private int freeInhabitant() { return this.habitants.getQuantity() - this.workers.getQuantity(); }
+    private int freeInhabitant() { return this.habitants.getSecond() - this.workers.getSecond(); }
 
     private Building getBuilding(Building.Type type) {
         return switch (type) {
@@ -135,17 +141,38 @@ public final class Manager {
         };
     }
 
-    private void consumeResources() {
-        List<Resource> toBeConsumed = new ArrayList<>();
-        this.constructedBuildings.values().forEach(it -> toBeConsumed.addAll(it.getConsomation()));
+    // TODO: Faire en sorte de stocker et de mettre à jour les resources a consomer et produire pour ne pas avoir a les calculer à chaque tour.
+    /*private void consumeResources() {
+        Resources toBeConsumed = new Resources();
+        for (Building building: this.constructedBuildings.values()) {
+            for (Map.Entry<Resource, Integer> entry: building.getBuildRequirements().entrySet()) {
+                if (toBeConsumed.containsKey(entry.getKey())) {
+                    toBeConsumed.put(entry.getKey(), entry.getValue() + toBeConsumed.get(entry.getKey()));
+                } else {
+                    toBeConsumed.put(entry.getKey(), entry.getValue());
+                }
+            }
+        }
         // Consommation de resource par les habitants
-        toBeConsumed.add(new Material(FOOD, this.habitants.getQuantity()));
-        this.delegate.removeFromStock(toBeConsumed);
+        if (toBeConsumed.containsKey(new Material(FOOD))) {
+            toBeConsumed.put(new Material(FOOD), toBeConsumed.get(new Material(FOOD)) + this.habitants.getSecond());
+        } else {
+            toBeConsumed.put(new Material(FOOD), this.habitants.getSecond());
+        }
+        this.player.removeFromStock(toBeConsumed);
     }
 
     private void productResources() {
         List<Resource> toBeProducted = new ArrayList<>();
         this.constructedBuildings.values().forEach(it -> toBeProducted.addAll(it.getProduction()));
-        this.delegate.removeFromStock(toBeProducted);
+        this.player.removeFromStock(toBeProducted);
+    }*/
+
+    private void updateHabitants(int value) {
+        this.habitants.setSecond(this.habitants.getSecond() + value);
+    }
+
+    private void updateWorkers(int value) {
+        this.workers.setSecond(this.workers.getSecond() + value);
     }
 }

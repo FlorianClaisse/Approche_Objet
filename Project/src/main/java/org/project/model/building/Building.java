@@ -1,33 +1,35 @@
 package org.project.model.building;
 
 import org.jetbrains.annotations.NotNull;
-import org.project.model.resource.Buyable;
+import org.project.model.resource.Purchasable;
 import org.project.model.resource.Resource;
+import org.project.model.resource.Resources;
 
 import java.util.List;
 import java.util.Set;
 
-public class Building extends Buyable {
+public class Building implements Purchasable {
     private final Type type;
     private int level;
+    private final int price;
     private final int nbHabitants;
     private final int minWorkers;
     private int maxWorkers;
     private int currentWorkers;
-    private final Set<Resource> buildRequirements;
-    private final Set<Resource> consomation;
-    private final Set<Resource> production;
+    private final Resources buildRequirements;
+    private final Resources consomation;
+    private final Resources production;
     private final int buildTime;
     private int remainingTime;
 
-    protected Building(@NotNull Type type, int nbHabitants, int minWorkers, int price, Set<Resource> buildRequirements, Set<Resource> consomation, Set<Resource> production, int buildTime) {
-        super(price);
+    protected Building(@NotNull Type type, int nbHabitants, int minWorkers, int price, Resources buildRequirements, Resources consomation, Resources production, int buildTime) {
         this.type = type;
         this.level = 1;
         this.nbHabitants = nbHabitants;
         this.minWorkers = minWorkers;
         this.maxWorkers = minWorkers;
         this.currentWorkers = minWorkers;
+        this.price = price;
         this.buildRequirements = buildRequirements;
         this.consomation = consomation;
         this.production = production;
@@ -38,9 +40,12 @@ public class Building extends Buyable {
     public int getNbHabitants() { return this.nbHabitants; }
     public int getMinWorkers() { return this.minWorkers; }
     public int getCurrentWorkers() { return this.currentWorkers; }
-    public List<Resource> getBuildRequirements() { return this.buildRequirements.stream().toList(); }
-    public List<Resource> getConsomation() { return this.consomation.stream().toList(); }
-    public List<Resource> getProduction() { return this.production.stream().toList(); }
+    public Resources getBuildRequirements() { return this.buildRequirements; }
+    public Resources getConsomation() { return this.consomation; }
+    public Resources getProduction() { return this.production; }
+
+    @Override public int getPrice() { return this.price; }
+    @Override public String getTypeName() { return this.type.rawValue; }
 
     public void removeOnePeriod() { this.remainingTime--; }
     public boolean isBuilt() { return this.remainingTime == 0; }

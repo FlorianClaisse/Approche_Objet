@@ -2,18 +2,17 @@ package org.project.model.resource;
 
 import java.util.Objects;
 
-public final class Material extends Buyable {
+public final class Material implements Purchasable {
     private final Type type;
+    private final int price;
 
-    public Material(Type type, int quantity) {
-        super(type.price);
+    public Material(Type type) {
         this.type = type;
-        this.addQuantity(quantity);
+        this.price = type.price;
     }
 
-    @Override public String toString() {
-        return this.type.rawValue + "(quantity=" + this.getQuantity() + ", price=" + this.getPrice() + ")";
-    }
+    @Override  public String getTypeName() { return this.type.rawValue; }
+    @Override  public int getPrice() { return this.price; }
 
     @Override public boolean equals(Object o) {
         if (this == o) return true;
@@ -22,9 +21,9 @@ public final class Material extends Buyable {
         return type == material.type;
     }
 
-    @Override public int hashCode() {
-        return Objects.hash(this.type);
-    }
+    @Override public int hashCode() { return Objects.hash(this.type); }
+
+    @Override public String toString() { return this.type.rawValue + "(price=" + this.price + ")"; }
 
     public enum Type {
         FOOD("Food", 1),

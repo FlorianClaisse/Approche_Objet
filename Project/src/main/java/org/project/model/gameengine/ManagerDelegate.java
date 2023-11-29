@@ -1,10 +1,10 @@
 package org.project.model.gameengine;
 
-import org.project.model.resource.Resource;
+import org.project.model.resource.Resources;
 
-import java.util.List;
 public interface ManagerDelegate {
-    boolean canConstruct(List<Resource> requirements);
-    void removeFromStock(List<Resource> resources);
-    void addToStock(List<Resource> resources);
+    boolean canBuy(int price);
+    boolean canConstruct(Resources requirements);
+    void removeFromStock(Resources resources);
+    void addToStock(Resources resources);
 }

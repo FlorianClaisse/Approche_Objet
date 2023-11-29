@@ -7,6 +7,7 @@ import org.project.model.gameengine.Player;
 import org.project.model.resource.Citizen;
 import org.project.model.resource.Material;
 import org.project.model.resource.Resource;
+import org.project.model.resource.Resources;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,23 +17,21 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
         Player player = new Player();
         player.printStock();
-        System.out.println("");
 
-        ArrayList<Resource> add = new ArrayList<>();
-        add.add(new Material(Material.Type.FOOD, 15));
-        add.add(new Material(Material.Type.STONE, 10));
+        Resources add = new Resources();
+        add.put(new Material(Material.Type.FOOD), 15);
+        add.put(new Material(Material.Type.STONE), 10);
         player.addToStock(add);
         player.printStock();
-        System.out.println("");
 
-        ArrayList<Resource> remove = new ArrayList<>();
-        remove.add(new Material(Material.Type.FOOD, 1));
-        remove.add(new Material(Material.Type.STONE, 100));
+        Resources remove = new Resources();
+        remove.put(new Material(Material.Type.FOOD), 1);
+        remove.put(new Material(Material.Type.STONE), 100);
         player.removeFromStock(remove);
         player.printStock();
 
-        ArrayList<Resource> construct = new ArrayList<>();
-        construct.add(new Material(Material.Type.WOOD, 10));
+        Resources construct = new Resources();
+        construct.put(new Material(Material.Type.WOOD), 10);
         //construct.add(new Material(Material.Type.CEMENT, 10));
         System.out.println("\n" + player.canConstruct(construct));
 

@@ -1,12 +1,10 @@
 package org.project.model.resource;
 
-public final class Citizen extends Resource {
-    public Citizen(int quantity) {
-        this.addQuantity(quantity);
-    }
+public final class Citizen implements Resource {
 
-    @Override
-    public String toString() {
-        return "Citizen(quantity=" + this.getQuantity() + ")";
-    }
+    public Citizen() { }
+
+    @Override public String getTypeName() { return "Citizen"; }
+
+    @Override public String toString() { return "Citizen()"; }
 }

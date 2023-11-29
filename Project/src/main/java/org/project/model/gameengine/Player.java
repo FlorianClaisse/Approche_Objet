@@ -2,73 +2,51 @@ package org.project.model.gameengine;
 
 import org.project.model.resource.Material;
 import org.project.model.resource.Resource;
+import org.project.model.resource.Resources;
 
 import java.util.*;
 
 public final class Player implements ManagerDelegate {
-    private final Set<Resource> stock;
+    private final Resources stock;
 
     public Player() {
-        stock = new HashSet<>();
-        stock.add(new Material(Material.Type.FOOD, 10));
-        stock.add(new Material(Material.Type.WOOD, 10));
+        stock = new Resources();
+        stock.put(new Material(Material.Type.FOOD), 10);
+        stock.put(new Material(Material.Type.WOOD), 10);
     }
 
-    public boolean canConstruct(List<Resource> requirements) {
-        // Vérifie SEULEMENT que le stock contient tout les types de ressources
-        if(!stock.containsAll(requirements))
-            return false;
+    @Override public boolean canConstruct(Resources requirements) {
+        // Vérifie que le stock contient assez de tous les types de ressources
+        for (Map.Entry<Resource, Integer> required: requirements.entrySet()) {
+            if (!stock.containsKey(required.getKey()))
+                return false;
 
-        // Vérifie que le stock contient assez de tout les types de ressources
-        for(Resource required : requirements) {
-            boolean enoughRequired = false;
-            for(Resource stocked : stock) {
-                if(required.equals(stocked)) {
-                    if(required.getQuantity() <= stocked.getQuantity())
-                        enoughRequired = true;
-                    break;
-                }
-            }
-            if(enoughRequired == false)
+            if (stock.get(required.getKey()) < required.getValue())
                 return false;
         }
-
         return true;
     }
 
-    public void removeFromStock(List<Resource> resources) {
-        for(Resource toRemove : resources) {
-            for(Resource stocked : stock) {
-                if(toRemove.equals(stocked)) {
-                    int toRemoveQuantity = toRemove.getQuantity();
-                    if(toRemoveQuantity >= stocked.getQuantity())
-                        stock.remove(stocked);
-                    else
-                        stocked.removeQuantity(toRemoveQuantity);
-                    break;
-                }
+    @Override public void removeFromStock(Resources resources) {
+        for (Map.Entry<Resource, Integer> toRemove: resources.entrySet()) {
+            stock.put(toRemove.getKey(), stock.get(toRemove.getKey()) - toRemove.getValue());
+        }
+    }
+
+    public void addToStock(Resources resources) {
+        for (Map.Entry<Resource, Integer> toAdd: resources.entrySet()) {
+            if (stock.containsKey(toAdd.getKey())) {
+                stock.put(toAdd.getKey(), toAdd.getValue() + stock.get(toAdd.getKey()));
+            } else {
+                stock.put(toAdd.getKey(), toAdd.getValue());
             }
         }
     }
 
-    public void addToStock(List<Resource> resources) {
-        for(Resource toAdd : resources) {
-            boolean alreadyStocked = false;
-            for(Resource stocked : stock) {
-                if(toAdd.equals(stocked)) {
-                    alreadyStocked = true;
-                    stocked.addQuantity(toAdd.getQuantity());
-                    break;
-                }
-            }
-            if(!alreadyStocked)
-                stock.add(toAdd);
-        }
-    }
+    @Override
+    public boolean canBuy(int price) { return false; }
 
     public void printStock() {
-        for(Resource stocked : stock) {
-            System.out.print(stocked + "\n");
-        }
+        System.out.println(stock);
     }
 }
