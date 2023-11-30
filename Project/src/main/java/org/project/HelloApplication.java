@@ -2,15 +2,11 @@ package org.project;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.project.model.building.BuildingFactory;
 import org.project.model.gameengine.Player;
-import org.project.model.resource.Citizen;
 import org.project.model.resource.Material;
-import org.project.model.resource.Resource;
 import org.project.model.resource.Resources;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class HelloApplication extends Application {
     @Override

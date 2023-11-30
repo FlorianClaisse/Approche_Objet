@@ -3,9 +3,6 @@ package org.project.model.building;
 import org.project.model.resource.Resource;
 import org.project.model.resource.Resources;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class BuildingBuilder {
     private Building.Type type;
     private int minHabitants;

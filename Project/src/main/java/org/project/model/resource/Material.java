@@ -11,8 +11,8 @@ public final class Material implements Purchasable {
         this.price = type.price;
     }
 
-    @Override  public String getTypeName() { return this.type.rawValue; }
-    @Override  public int getPrice() { return this.price; }
+    @Override public String getTypeName() { return this.type.rawValue; }
+    @Override public int getPrice() { return this.price; }
 
     @Override public boolean equals(Object o) {
         if (this == o) return true;

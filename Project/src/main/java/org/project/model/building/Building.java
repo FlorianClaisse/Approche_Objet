@@ -2,11 +2,7 @@ package org.project.model.building;
 
 import org.jetbrains.annotations.NotNull;
 import org.project.model.resource.Purchasable;
-import org.project.model.resource.Resource;
 import org.project.model.resource.Resources;
-
-import java.util.List;
-import java.util.Set;
 
 public class Building implements Purchasable {
     private final Type type;
