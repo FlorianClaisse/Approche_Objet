@@ -35,7 +35,7 @@ public final class Player implements CityDelegate {
     }
 
     public void addToStock(Resources resources) {
-        resources.forEach((r, q) -> this.stock.get(r).remove(q.get()));
+        resources.forEach((r, q) -> this.stock.get(r).add(q.get()));
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.project.model.building;
 
 import org.project.model.resource.Resource;
 import org.project.model.resource.Resources;
+import org.project.utils.Quantity;
 
 public class BuildingBuilder {
     private Building.Type type;
@@ -53,19 +54,19 @@ public class BuildingBuilder {
 
     public BuildingBuilder addBuildRequirement(Resource resources, int quantity) {
         if (quantity <= 0) throw new IllegalArgumentException("The quantity of a material cannot be less than or equal to 0");
-        this.buildRequirements.put(resources, quantity);
+        this.buildRequirements.put(resources, new Quantity(quantity));
         return this;
     }
 
     public BuildingBuilder addConsomation(Resource resources, int quantity) {
         if (quantity <= 0) throw new IllegalArgumentException("The quantity of a material cannot be less than or equal to 0");
-        this.consomation.put(resources, quantity);
+        this.consomation.put(resources, new Quantity(quantity));
         return this;
     }
 
     public BuildingBuilder addProduction(Resource resources, int quantity) {
         if (quantity <= 0) throw new IllegalArgumentException("The quantity of a material cannot be less than or equal to 0");
-        this.production.put(resources, quantity);
+        this.production.put(resources, new Quantity(quantity));
         return this;
     }
 

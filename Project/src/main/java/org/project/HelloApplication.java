@@ -5,32 +5,13 @@ import javafx.stage.Stage;
 import org.project.model.gameengine.Player;
 import org.project.model.resource.Material;
 import org.project.model.resource.Resources;
+import org.project.utils.Quantity;
 
 import java.io.IOException;
 
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        Player player = new Player();
-        player.printStock();
-
-        Resources add = new Resources();
-        add.put(new Material(Material.Type.FOOD), 15);
-        add.put(new Material(Material.Type.STONE), 10);
-        player.addToStock(add);
-        player.printStock();
-
-        Resources remove = new Resources();
-        remove.put(new Material(Material.Type.FOOD), 1);
-        remove.put(new Material(Material.Type.STONE), 100);
-        player.removeFromStock(remove);
-        player.printStock();
-
-        Resources construct = new Resources();
-        construct.put(new Material(Material.Type.WOOD), 10);
-        //construct.add(new Material(Material.Type.CEMENT, 10));
-        System.out.println("\n" + player.canConstruct(construct));
-
 
         /*System.out.println(BuildingFactory.makeWoodenCabin());
         var cite = new Citizen(45);
@@ -65,6 +46,26 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+        Player player = new Player();
+        player.printStock();
+
+        Resources add = new Resources();
+        add.put(new Material(Material.Type.FOOD), new Quantity(1));
+        add.put(new Material(Material.Type.STONE), new Quantity(10));
+        player.addToStock(add);
+        player.printStock();
+
+        Resources remove = new Resources();
+        remove.put(new Material(Material.Type.FOOD), new Quantity(1));
+        remove.put(new Material(Material.Type.STONE), new Quantity(100));
+        player.removeFromStock(remove);
+        player.printStock();
+
+        Resources construct = new Resources();
+        construct.put(new Material(Material.Type.WOOD), new Quantity(10));
+        construct.put(new Material(Material.Type.STONE), new Quantity(10));
+        //construct.add(new Material(Material.Type.CEMENT, 10));
+        System.out.println("\n" + player.canConstruct(construct));
+        //launch();
     }
 }
