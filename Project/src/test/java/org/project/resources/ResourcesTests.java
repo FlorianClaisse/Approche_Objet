@@ -18,6 +18,13 @@ public class ResourcesTests {
     }
 
     @Test
+    void testInitWithResources() {
+        Resources testResources = new Resources(this.resources);
+        assertEquals(testResources.size(), this.resources.size());
+        assertEquals(testResources, this.resources);
+    }
+
+    @Test
     void testInitWithAllResources() {
         this.resources.initWithAllResources();
 

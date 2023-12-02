@@ -6,6 +6,10 @@ import java.util.HashMap;
 
 public final class Resources extends HashMap<Resource, Quantity> {
 
+    public Resources(Resources resources) {
+        super(resources);
+    }
+
     public Resources() {
         super();
     }
