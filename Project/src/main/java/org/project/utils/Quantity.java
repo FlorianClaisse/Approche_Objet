@@ -11,13 +11,17 @@ public final class Quantity {
     public int get() { return this.value; }
     public void set(int value) { this.value = value; }
 
-    public void add() { this.update(1); }
-    public void add(int value) { this.update(value); }
+    public void add() { this.value += 1; }
+    public void add(int value) {
+        if (value < 0) throw new IllegalArgumentException("You pass " + value + " to add");
+        this.value += value;
+    }
 
-    public void remove() { this.update(-1); }
-    public void remove(int value) { this.update(-value); }
-
-    private void update(int value) { this.value += value; }
+    public void remove() { this.value--; }
+    public void remove(int value) {
+        if (value < 0) throw new IllegalArgumentException("You pass " + value + " to remove");
+        this.value -= value;
+    }
 
     @Override
     public boolean equals(Object o) {
