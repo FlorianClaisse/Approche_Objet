@@ -1,4 +1,4 @@
-package org.project.building;
+package org.project.resources;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
