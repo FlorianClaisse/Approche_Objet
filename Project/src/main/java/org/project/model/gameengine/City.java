@@ -33,14 +33,16 @@ public final class City {
     public City(@NotNull CityDelegate player) {
         this.constructedBuildings = new HashMap<>();
         this.beConsumed = new Resources();
+        this.beConsumed.initWithAllResources();
         this.beProducted = new Resources();
+        this.beProducted.initWithAllResources();
         this.underConstruction = new HashMap<>();
         this.habitants = new Pair<>(new Citizen(), new Quantity());
         this.workers = new Pair<>(new Citizen(), new Quantity());
         this.player = player;
     }
 
-    public void update() {
+    public void dayEnd() {
         this.player.addToStock(this.beProducted);
         this.player.removeFromStock(this.beConsumed);
 
@@ -79,6 +81,7 @@ public final class City {
         UNDER_COUNTER++;
 
         this.player.removeFromStock(building.getBuildRequirements());
+        this.player.buy(building.getPrice());
         return true;
     }
 
@@ -115,6 +118,26 @@ public final class City {
         return true;
     }
 
+    public boolean gameIsOver() {
+        return this.player.isInShortage();
+    }
+
+    public Map<Integer, Building> getConstructedBuildings() {
+        return this.constructedBuildings;
+    }
+
+    public Map<Integer, Building> getUnderConstruction() {
+        return this.underConstruction;
+    }
+
+    public Resources getBeConsumed() {
+        return this.beConsumed;
+    }
+
+    public Resources getBeProducted() {
+        return this.beProducted;
+    }
+
     private boolean removeBuilding(boolean under, int key) {
         Map<Integer, Building> buildings = under ? this.underConstruction : this.constructedBuildings;
 
@@ -123,15 +146,19 @@ public final class City {
         Building oldBuilding = buildings.remove(key);
         this.updateHabitants(-(oldBuilding.getNbHabitants()));
         this.updateWorkers(-(oldBuilding.getCurrentWorkers()));
-        oldBuilding.getConsomation().forEach((r, q) -> this.beConsumed.get(r).remove(q.get()));
-        oldBuilding.getProduction().forEach((r, q) -> this.beProducted.get(r).remove(q.get()));
+        if (!under) {
+            oldBuilding.getConsomation().forEach((r, q) -> this.beConsumed.get(r).remove(q.get()));
+            oldBuilding.getProduction().forEach((r, q) -> this.beProducted.get(r).remove(q.get()));
+        }
         this.beConsumed.get(new Material(FOOD)).remove(oldBuilding.getNbHabitants());
 
 
         if (under) {
             // Le player récupère 50% du coup de construction du building
             Resources resources = new Resources();
+            System.out.println(oldBuilding.getBuildRequirements());
             oldBuilding.getBuildRequirements().forEach((r, q) -> resources.put(r, new Quantity(q.get() / 2)));
+            System.out.println(resources);
             this.player.addToStock(resources);
         }
 
@@ -155,10 +182,16 @@ public final class City {
     }
 
     private void updateHabitants(int value) {
-        this.habitants.getSecond().add(value);
+        if (value < 0)
+            this.habitants.getSecond().remove(-value);
+        else
+            this.habitants.getSecond().add(value);
     }
 
     private void updateWorkers(int value) {
-        this.workers.getSecond().add(value);
+        if (value < 0)
+            this.workers.getSecond().remove(-value);
+        else
+            this.workers.getSecond().add(value);
     }
 }

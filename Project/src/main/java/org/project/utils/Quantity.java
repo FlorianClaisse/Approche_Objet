@@ -12,16 +12,10 @@ public final class Quantity {
     public void set(int value) { this.value = value; }
 
     public void add() { this.update(1); }
-    public void add(int value) {
-        if (value < 0) throw new IllegalArgumentException("You try to add a negative value please use 'remove'");
-        this.update(value);
-    }
+    public void add(int value) { this.update(value); }
 
     public void remove() { this.update(-1); }
-    public void remove(int value) {
-        if (value < 0) throw new IllegalArgumentException("You try to add a negative value please use 'add'");
-        this.update(-value);
-    }
+    public void remove(int value) { this.update(-value); }
 
     private void update(int value) { this.value += value; }
 

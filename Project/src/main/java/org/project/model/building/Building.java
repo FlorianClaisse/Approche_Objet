@@ -64,6 +64,17 @@ public class Building implements Purchasable {
         this.currentWorkers -= value;
     }
 
+    @Override
+    public String toString() {
+        return type +
+                "(level=" + level +
+                ", nbHabitants=" + nbHabitants +
+                ", minWorkers=" + minWorkers +
+                ", currentWorkers=" + currentWorkers +
+                ", maxWorkers=" + maxWorkers +
+                ')';
+    }
+
     public enum Type {
         WOODEN_CABIN("Wooden Cabin"),
         HOUSE ("House"),

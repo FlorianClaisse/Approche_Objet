@@ -7,4 +7,6 @@ public interface CityDelegate {
     boolean canConstruct(Resources requirements);
     void removeFromStock(Resources resources);
     void addToStock(Resources resources);
+    boolean isInShortage();
+    void buy(int price);
 }

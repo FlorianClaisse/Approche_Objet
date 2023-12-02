@@ -1,19 +1,21 @@
 package org.project;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
+import org.project.model.building.Building;
+import org.project.model.gameengine.City;
 import org.project.model.gameengine.Player;
-import org.project.model.resource.Material;
 import org.project.model.resource.Resources;
-import org.project.utils.Quantity;
 
-import java.io.IOException;
+import java.util.Map;
+import java.util.Scanner;
 
-public class HelloApplication extends Application {
-    @Override
+public class HelloApplication /*extends Application*/ {
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final Player player = new Player();
+    private static final City city = new City(player);
+    /*@Override
     public void start(Stage stage) throws IOException {
 
-        /*System.out.println(BuildingFactory.makeWoodenCabin());
+        System.out.println(BuildingFactory.makeWoodenCabin());
         var cite = new Citizen(45);
 
         // Charger l'image d'herbe depuis les ressources
@@ -42,30 +44,147 @@ public class HelloApplication extends Application {
         // Définir la scène pour la fenêtre principale
         stage.setScene(scene);
         stage.setTitle("Fenêtre avec texture d'herbe"); // Titre de la fenêtre
-        stage.show();*/
-    }
+        stage.show();
+    }*/
 
     public static void main(String[] args) {
-        Player player = new Player();
-        player.printStock();
+        do {
+            prompt("""
+                    [1] View your resources
+                    [2] See your buildings constructed
+                    [3] See your buildings under construction
+                    [4] Build a new building
+                    [5] See your resource production
+                    [6] See your resource consumption
+                    [7] Remove building
+                    [8] Remove building under construction
+                    [9] Remove workers to building
+                    [10] Add workers to building
+                    [11] Nothing""");
 
-        Resources add = new Resources();
-        add.put(new Material(Material.Type.FOOD), new Quantity(1));
-        add.put(new Material(Material.Type.STONE), new Quantity(10));
-        player.addToStock(add);
-        player.printStock();
+            int result = getInt();
+            switch (result) {
+                case 1 -> printResources(player.getStock());
+                case 2 -> printBuilding(city.getConstructedBuildings(), "Constructed Buildings");
+                case 3 -> printBuilding(city.getUnderConstruction(), "Building under construction");
+                case 4 -> buildNewBuilding();
+                case 5 -> printResources(city.getBeProducted());
+                case 6 -> printResources(city.getBeConsumed());
+                case 7 -> removeBuilding(city.getConstructedBuildings(), false);
+                case 8 -> removeBuilding(city.getUnderConstruction(), true);
+                case 9 -> removeWorkers();
+                case 10 -> addWorkers();
+                default -> prompt("Veuillez entrer un nombre valide.");
+            }
 
-        Resources remove = new Resources();
-        remove.put(new Material(Material.Type.FOOD), new Quantity(1));
-        remove.put(new Material(Material.Type.STONE), new Quantity(100));
-        player.removeFromStock(remove);
-        player.printStock();
+            if (result == 4 || result == 7 || result == 8 || result == 9 || result == 10 || result == 11)
+                city.dayEnd();
+        } while(!city.gameIsOver());
+    }
 
-        Resources construct = new Resources();
-        construct.put(new Material(Material.Type.WOOD), new Quantity(10));
-        construct.put(new Material(Material.Type.STONE), new Quantity(10));
-        //construct.add(new Material(Material.Type.CEMENT, 10));
-        System.out.println("\n" + player.canConstruct(construct));
-        //launch();
+    private static void prompt(String message) {
+        System.out.println("---------------------------");
+        System.out.println(message);
+        System.out.println("---------------------------");
+    }
+
+    private static int getInt() {
+        if (scanner.hasNextInt()) {
+            return scanner.nextInt();
+        } else {
+            scanner.next();
+            return -1;
+        }
+    }
+
+    private static void printResources(Resources resources) {
+        StringBuilder stringBuilder = new StringBuilder("Your resources\n");
+        resources.forEach((r, q) -> {
+            if (q.get() > 0)
+                stringBuilder.append(r.getTypeName())
+                        .append("(quantity=")
+                        .append(q)
+                        .append(")\n");
+        });
+        prompt(stringBuilder.toString());
+    }
+
+    private static void printBuilding(Map<Integer, Building> buildings, String message) {
+        StringBuilder stringBuilder = new StringBuilder(message).append('\n');
+        buildings.forEach((id, b) -> stringBuilder.append(b.toString())
+                                                  .append('\n')
+        );
+        prompt(stringBuilder.toString());
+    }
+
+    private static void buildNewBuilding() {
+        Building.Type[] buildintTypes = Building.Type.values();
+        StringBuilder stringBuilder = new StringBuilder("What type of building\n");
+        for (int i = 0; i < buildintTypes.length; i++) {
+            stringBuilder.append("[").append(i).append("] ").append(buildintTypes[i]).append('\n');
+        }
+        prompt(stringBuilder.toString());
+
+        int res = getInt();
+        if (res == -1) {
+            System.out.println("Please provide a valid entry.");
+        } else {
+            if (!city.addBuilding(buildintTypes[res]))
+                System.out.println("You don't have enough resources for this building.");
+        }
+    }
+
+    private static void removeBuilding(Map<Integer, Building> buildings, boolean under) {
+        StringBuilder stringBuilder = new StringBuilder("Remove building\n");
+        buildings.forEach((id, b) -> stringBuilder.append("[").append(id).append("] ").append(b).append('\n'));
+        System.out.println(buildings);
+        prompt(stringBuilder.toString());
+
+        int res = getInt();
+        if (res == -1)
+            System.out.println("Please provide a valid entry.");
+        else
+            if (under && !city.removeUnderBuilding(res))
+                System.out.println("Please provide a valid entry.");
+            else if (!under && !city.removeExistingBuilding(res))
+                System.out.println("Please provide a valid entry.");
+    }
+
+    private static void removeWorkers() {
+        StringBuilder builder = new StringBuilder("Remove workers\nWhich building ?");
+        Map<Integer, Building> buildings = city.getConstructedBuildings();
+        buildings.forEach((id, b) -> builder.append("[").append(id).append("] ").append(b).append('\n'));
+        prompt(builder.toString());
+
+        int res = getInt();
+        if (res == -1 || !buildings.containsKey(res))
+            System.out.println("Please provide a valid entry.");
+
+        System.out.println("How much ?");
+        int quantity = getInt();
+        if (res == -1)
+            System.out.println("Please provide a valid entry.");
+
+        if (!city.removeWorkersFromBuilding(res, quantity))
+            System.out.println("Unable to delete workers");
+    }
+
+    private static void addWorkers() {
+        StringBuilder builder = new StringBuilder("Add workers\nWhich building ?");
+        Map<Integer, Building> buildings = city.getConstructedBuildings();
+        buildings.forEach((id, b) -> builder.append("[").append(id).append("] ").append(b).append('\n'));
+        prompt(builder.toString());
+
+        int res = getInt();
+        if (res == -1 || !buildings.containsKey(res))
+            System.out.println("Please provide a valid entry.");
+
+        System.out.println("How much ?");
+        int quantity = getInt();
+        if (res == -1)
+            System.out.println("Please provide a valid entry.");
+
+        if (!city.addWorkersToBuilding(res, quantity))
+            System.out.println("Unable to delete workers");
     }
 }
