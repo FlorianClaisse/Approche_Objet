@@ -12,6 +12,7 @@ public final class Resources extends HashMap<Resource, Quantity> {
 
     public void initWithAllResources() {
         this.put(new Gold(), new Quantity());
+
         for (Material.Type type: Material.Type.values()) {
             this.put(new Material(type), new Quantity());
         }

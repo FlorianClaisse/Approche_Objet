@@ -3,6 +3,8 @@ package org.project.utils;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /** A value that represents either a success or a failure, including an associated value in each case. */
 public final class Result<S, E> {
     private final S success;
@@ -46,5 +48,25 @@ public final class Result<S, E> {
             throw new IllegalStateException("Result is not a error");
         }
         return error;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Result<?, ?> result = (Result<?, ?>) o;
+        return isSuccess == result.isSuccess && Objects.equals(success, result.success) && Objects.equals(error, result.error);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(success, error, isSuccess);
+    }
+
+    @Override
+    public String toString() {
+        return "Result(success=" + success +
+                ", error=" + error +
+                ", isSuccess=" + isSuccess + ')';
     }
 }
