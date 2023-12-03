@@ -1,135 +1,126 @@
 package org.project.model.building;
 
-import org.project.model.resource.Gold;
-import org.project.model.resource.Material;
-
 import static org.project.model.building.Building.Type.*;
-import static org.project.model.resource.Material.Type.*;
+import static org.project.model.resource.ResourceFactory.*;
 
 
 public class BuildingFactory {
 
     public static Building makeWoodenCabin() {
-        return BuildingBuilder.builder()
+        return BuildingBuilder.newBuilder()
                 .setType(WOODEN_CABIN)
-                .setMinHabitants(2)
+                .setNbHabitants(2)
                 .setMinWorkers(2)
                 .setPrice(1)
-                .addBuildRequirement(new Material(WOOD), 1)
-                .addProduction(new Material(WOOD), 2)
-                .addProduction(new Material(FOOD), 2)
+                .addBuildRequirement(wood(), 1)
+                .addProduction(wood(), 2)
+                .addProduction(food(), 2)
                 .setBuildTime(2)
                 .build();
     }
 
     public static Building makeHouse() {
-        return BuildingBuilder.builder()
+        return BuildingBuilder.newBuilder()
                 .setType(HOUSE)
-                .setMinHabitants(4)
-                .setMinWorkers(0)
+                .setNbHabitants(4)
                 .setPrice(1)
-                .addBuildRequirement(new Material(WOOD), 2)
-                .addBuildRequirement(new Material(STONE), 2)
+                .addBuildRequirement(wood(), 2)
+                .addBuildRequirement(stone(), 2)
                 .setBuildTime(4)
                 .build();
     }
 
     public static Building makeApartment() {
-        return BuildingBuilder.builder()
+        return BuildingBuilder.newBuilder()
                 .setType(APARTMENT_BUILDING)
-                .setMinHabitants(60)
-                .setMinWorkers(0)
+                .setNbHabitants(60)
                 .setPrice(4)
-                .addBuildRequirement(new Material(WOOD), 50)
-                .addBuildRequirement(new Material(STONE), 50)
+                .addBuildRequirement(wood(), 50)
+                .addBuildRequirement(stone(), 50)
                 .setBuildTime(6)
                 .build();
 
     }
 
     public static Building makeFarm() {
-        return BuildingBuilder.builder()
+        return BuildingBuilder.newBuilder()
                 .setType(FARM)
-                .setMinHabitants(5)
+                .setNbHabitants(5)
                 .setMinWorkers(3)
                 .setPrice(4)
-                .addBuildRequirement(new Material(WOOD), 5)
-                .addBuildRequirement(new Material(STONE), 5)
-                .addProduction(new Material(FOOD), 10)
+                .addBuildRequirement(wood(), 5)
+                .addBuildRequirement(stone(), 5)
+                .addProduction(food(), 10)
                 .setBuildTime(2)
                 .build();
     }
 
     public static Building makeQuarry() {
-        return BuildingBuilder.builder()
+        return BuildingBuilder.newBuilder()
                 .setType(QUARRY)
-                .setMinHabitants(2)
+                .setNbHabitants(2)
                 .setMinWorkers(30)
                 .setPrice(4)
-                .addBuildRequirement(new Material(WOOD), 50)
-                .addProduction(new Material(STONE), 4)
-                .addProduction(new Material(IRON), 4)
-                .addProduction(new Material(COAL), 4)
-                .addProduction(new Gold(), 2)
+                .addBuildRequirement(wood(), 50)
+                .addProduction(stone(), 4)
+                .addProduction(iron(), 4)
+                .addProduction(coal(), 4)
+                .addProduction(gold(), 2)
                 .setBuildTime(2)
                 .build();
     }
 
     public static Building makeLumberMill() {
-        return BuildingBuilder.builder()
+        return BuildingBuilder.newBuilder()
                 .setType(LUMBER_MILL)
-                .setMinHabitants(0)
                 .setMinWorkers(10)
                 .setPrice(6)
-                .addBuildRequirement(new Material(WOOD), 50)
-                .addBuildRequirement(new Material(STONE), 50)
-                .addConsomation(new Material(WOOD), 4)
-                .addProduction(new Material(LUMBER), 4)
+                .addBuildRequirement(wood(), 50)
+                .addBuildRequirement(stone(), 50)
+                .addConsumption(wood(), 4)
+                .addProduction(lumber(), 4)
                 .setBuildTime(4)
                 .build();
     }
 
     public static Building makeCementPlant() {
-        return BuildingBuilder.builder()
+        return BuildingBuilder.newBuilder()
                 .setType(CEMENT_PLANT)
-                .setMinHabitants(0)
                 .setMinWorkers(10)
                 .setPrice(6)
-                .addBuildRequirement(new Material(WOOD), 50)
-                .addBuildRequirement(new Material(STONE), 50)
-                .addConsomation(new Material(STONE), 4)
-                .addConsomation(new Material(COAL), 4)
-                .addProduction(new Material(CEMENT), 4)
+                .addBuildRequirement(wood(), 50)
+                .addBuildRequirement(stone(), 50)
+                .addConsumption(stone(), 4)
+                .addConsumption(coal(), 4)
+                .addProduction(cement(), 4)
                 .setBuildTime(4)
                 .build();
     }
 
     public static Building makeSteelMill() {
-        return BuildingBuilder.builder()
+        return BuildingBuilder.newBuilder()
                 .setType(STEEL_MILL)
-                .setMinHabitants(0)
                 .setMinWorkers(40)
                 .setPrice(6)
-                .addBuildRequirement(new Material(WOOD), 100)
-                .addBuildRequirement(new Material(STONE), 50)
-                .addConsomation(new Material(IRON), 4)
-                .addConsomation(new Material(COAL), 2)
-                .addProduction(new Material(STEEL), 4)
+                .addBuildRequirement(wood(), 100)
+                .addBuildRequirement(stone(), 50)
+                .addConsumption(iron(), 4)
+                .addConsumption(coal(), 2)
+                .addProduction(steel(), 4)
                 .setBuildTime(6)
                 .build();
     }
 
     public static Building makeToolFactory() {
-        return BuildingBuilder.builder()
+        return BuildingBuilder.newBuilder()
                 .setType(TOOL_FACTORY)
-                .setMinHabitants(0)
                 .setMinWorkers(12)
                 .setPrice(8)
-                .addBuildRequirement(new Material(WOOD), 50)
-                .addBuildRequirement(new Material(STONE), 50)
-                .addConsomation(new Material(STEEL), 4)
-                .addConsomation(new Material(COAL), 4)
-                .addProduction(new Material(TOOLS), 4)
+                .addBuildRequirement(wood(), 50)
+                .addBuildRequirement(stone(), 50)
+                .addConsumption(steel(), 4)
+                .addConsumption(coal(), 4)
+                .addProduction(tools(), 4)
                 .setBuildTime(8)
                 .build();
     }

@@ -5,30 +5,34 @@ import org.project.model.resource.Purchasable;
 import org.project.model.resource.Resources;
 
 public class Building implements Purchasable {
+    private int level = 1;
+    
     private final Type type;
-    private int level;
     private final int price;
     private final int nbHabitants;
     private final int minWorkers;
-    private int maxWorkers;
     private int currentWorkers;
+    private int maxWorkers;
     private final Resources buildRequirements;
-    private final Resources consomation;
+    private final Resources consumption;
     private final Resources production;
     private final int buildTime;
     private int remainingTime;
 
-    protected Building(@NotNull Type type, int nbHabitants, int minWorkers, int price, Resources buildRequirements, Resources consomation, Resources production, int buildTime) {
+    protected Building(@NotNull Type type, int price, int nbHabitants, int minWorkers, Resources buildRequirements, Resources consumption, Resources production, int buildTime) {
         this.type = type;
-        this.level = 1;
-        this.nbHabitants = nbHabitants;
-        this.minWorkers = minWorkers;
-        this.maxWorkers = minWorkers;
-        this.currentWorkers = minWorkers;
         this.price = price;
+
+        this.nbHabitants = nbHabitants;
+
+        this.minWorkers = minWorkers;
+        this.currentWorkers = minWorkers;
+        this.maxWorkers = minWorkers;
+
         this.buildRequirements = buildRequirements;
-        this.consomation = consomation;
+        this.consumption = consumption;
         this.production = production;
+
         this.buildTime = buildTime;
         this.remainingTime = buildTime;
     }
@@ -37,7 +41,7 @@ public class Building implements Purchasable {
     public int getMinWorkers() { return this.minWorkers; }
     public int getCurrentWorkers() { return this.currentWorkers; }
     public Resources getBuildRequirements() { return this.buildRequirements; }
-    public Resources getConsomation() { return this.consomation; }
+    public Resources getConsumption() { return this.consumption; }
     public Resources getProduction() { return this.production; }
 
     @Override public int getPrice() { return this.price; }

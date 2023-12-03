@@ -61,7 +61,7 @@ public final class City {
                 BUILDING_COUNTER++;
 
                 this.beConsumed.get(new Material(FOOD)).add(building.getNbHabitants());
-                building.getConsomation().forEach((r, q) -> this.beConsumed.get(r).add(q.get()));
+                building.getConsumption().forEach((r, q) -> this.beConsumed.get(r).add(q.get()));
                 building.getProduction().forEach((r, q) -> this.beProducted.get(r).add(q.get()));
             }
         }
@@ -147,7 +147,7 @@ public final class City {
         this.updateHabitants(-(oldBuilding.getNbHabitants()));
         this.updateWorkers(-(oldBuilding.getCurrentWorkers()));
         if (!under) {
-            oldBuilding.getConsomation().forEach((r, q) -> this.beConsumed.get(r).remove(q.get()));
+            oldBuilding.getConsumption().forEach((r, q) -> this.beConsumed.get(r).remove(q.get()));
             oldBuilding.getProduction().forEach((r, q) -> this.beProducted.get(r).remove(q.get()));
         }
         this.beConsumed.get(new Material(FOOD)).remove(oldBuilding.getNbHabitants());

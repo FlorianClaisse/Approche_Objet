@@ -4,6 +4,8 @@ import org.project.utils.Quantity;
 
 import java.util.HashMap;
 
+import static org.project.model.resource.ResourceFactory.gold;
+
 public final class Resources extends HashMap<Resource, Quantity> {
 
     public Resources(Resources resources) {
@@ -15,7 +17,7 @@ public final class Resources extends HashMap<Resource, Quantity> {
     }
 
     public void initWithAllResources() {
-        this.put(new Gold(), new Quantity());
+        this.put(gold(), new Quantity());
 
         for (Material.Type type: Material.Type.values()) {
             this.put(new Material(type), new Quantity());

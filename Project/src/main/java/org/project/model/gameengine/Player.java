@@ -8,7 +8,8 @@ import org.project.utils.Quantity;
 
 import java.util.Map;
 
-import static org.project.model.resource.Material.Type.*;
+import static org.project.model.resource.Material.Type.FOOD;
+import static org.project.model.resource.Material.Type.WOOD;
 
 public final class Player implements CityDelegate {
     private final Resources stock;
