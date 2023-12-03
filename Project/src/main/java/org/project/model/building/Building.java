@@ -1,6 +1,5 @@
 package org.project.model.building;
 
-import org.jetbrains.annotations.NotNull;
 import org.project.model.resource.Purchasable;
 import org.project.model.resource.Resources;
 
@@ -19,7 +18,9 @@ public class Building implements Purchasable {
     private final int buildTime;
     private int remainingTime;
 
-    protected Building(@NotNull Type type, int price, int nbHabitants, int minWorkers, Resources buildRequirements, Resources consumption, Resources production, int buildTime) {
+    protected Building(Type type, int price, int nbHabitants, int minWorkers, Resources buildRequirements, Resources consumption, Resources production, int buildTime) {
+        if (type == null) throw new IllegalArgumentException("Can't use null for building type");
+        if (nbHabitants == 0 && minWorkers == 0) throw new IllegalStateException("nbHabitants and minWorkers can't be both equal to 0");
         this.type = type;
         this.price = price;
 
@@ -37,45 +38,59 @@ public class Building implements Purchasable {
         this.remainingTime = buildTime;
     }
 
+    public boolean canAddWorkers(int quantity) {
+        return (this.currentWorkers + quantity) <= this.maxWorkers;
+    }
+
+    public boolean canRemoveWorkers(int quantity) {
+        return (this.currentWorkers - quantity) >= this.minWorkers;
+    }
+
+    // TODO: Ajouter l'augmentation de la prodution et de la consommation
+    public void addWorkers(int quantity) {
+        if (!canAddWorkers(quantity)) throw new IllegalStateException("Can't add workers please use canAddWorkers()");
+        this.currentWorkers += quantity;
+    }
+
+    // TODO: Ajouter la diminution de la production et de la consommation.
+    public void removeWorkers(int quantity) {
+        if (!canRemoveWorkers(quantity)) throw new IllegalStateException("Can't remove workers please use canRemoveWorkers()");
+        this.currentWorkers -= quantity;
+    }
+
+    public void removeOnePeriod() {
+        if (this.remainingTime > 0)
+            this.remainingTime--;
+    }
+
+    public boolean isBuilt() { return this.remainingTime == 0; }
+
+    public int getLevel() { return this.level; }
+    @Override public String getTypeName() { return this.type.rawValue; }
+    @Override public int getPrice() { return this.price; }
     public int getNbHabitants() { return this.nbHabitants; }
     public int getMinWorkers() { return this.minWorkers; }
     public int getCurrentWorkers() { return this.currentWorkers; }
+    public int getMaxWorkers() { return this.maxWorkers; }
     public Resources getBuildRequirements() { return this.buildRequirements; }
     public Resources getConsumption() { return this.consumption; }
     public Resources getProduction() { return this.production; }
-
-    @Override public int getPrice() { return this.price; }
-    @Override public String getTypeName() { return this.type.rawValue; }
-
-    public void removeOnePeriod() { this.remainingTime--; }
-    public boolean isBuilt() { return this.remainingTime == 0; }
-
-    public boolean canAddWorkers(int value) {
-        return (this.currentWorkers + value) <= this.maxWorkers;
-    }
-
-    public boolean canRemoveWorkers(int value) {
-        return (this.currentWorkers - value) >= this.minWorkers;
-    }
-
-    public void addWorkers(int value) {
-        if (!canAddWorkers(value)) throw new IllegalStateException("Can't add workers please use canAddWorkers()");
-        this.currentWorkers += value;
-    }
-
-    public void removeWorkers(int value) {
-        if (!canRemoveWorkers(value)) throw new IllegalStateException("Can't remove workers please use canRemoveWorkers()");
-        this.currentWorkers -= value;
-    }
+    public int getBuildTime() { return this.buildTime; }
 
     @Override
     public String toString() {
         return type +
                 "(level=" + level +
+                ", price=" + price +
                 ", nbHabitants=" + nbHabitants +
                 ", minWorkers=" + minWorkers +
                 ", currentWorkers=" + currentWorkers +
                 ", maxWorkers=" + maxWorkers +
+                ", buildRequirements=" + buildRequirements +
+                ", consumption=" + consumption +
+                ", production=" + production +
+                ", buildTime=" + buildTime +
+                ", remainingTime=" + remainingTime +
                 ')';
     }
 

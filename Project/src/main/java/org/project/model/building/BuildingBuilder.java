@@ -7,8 +7,8 @@ import org.project.utils.Quantity;
 public class BuildingBuilder {
     private Building.Type type = null; // Pour être obligé de set le type dans le builder sinon exception
     private int price = 0;
-    private int nbHabitants = 0;
-    private int minWorkers = 0;
+    private int nbHabitants = 0; // Pour obliger de set au minimum nbHabitants ou minWorkers
+    private int minWorkers = 0; // Pour obliger de set au minimum nbHabitants ou minWorkers
     private final Resources buildRequirements = new Resources();
     private final Resources consumption = new Resources();
     private final Resources production = new Resources();
