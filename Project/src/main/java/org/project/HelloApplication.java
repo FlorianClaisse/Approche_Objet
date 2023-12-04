@@ -74,7 +74,8 @@ public class HelloApplication /*extends Application*/ {
                 case 8 -> removeBuilding(city.getUnderConstruction(), true);
                 case 9 -> removeWorkers();
                 case 10 -> addWorkers();
-                default -> prompt("Veuillez entrer un nombre valide.");
+                case 11 -> {}
+                default -> prompt("Please enter a valid number.");
             }
 
             if (result == 4 || result == 7 || result == 8 || result == 9 || result == 10 || result == 11)
@@ -126,11 +127,11 @@ public class HelloApplication /*extends Application*/ {
         prompt(stringBuilder.toString());
 
         int res = getInt();
-        if (res == -1) {
-            System.out.println("Please provide a valid entry.");
-        } else {
+        if (res >= 0 && res < buildintTypes.length) {
             if (!city.addBuilding(buildintTypes[res]))
                 System.out.println("You don't have enough resources for this building.");
+        } else {
+            System.out.println("Please provide a valid entry.");
         }
     }
 
@@ -185,6 +186,6 @@ public class HelloApplication /*extends Application*/ {
             System.out.println("Please provide a valid entry.");
 
         if (!city.addWorkersToBuilding(res, quantity))
-            System.out.println("Unable to delete workers");
+            System.out.println("Unable to add workers");
     }
 }
