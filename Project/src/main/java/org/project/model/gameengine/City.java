@@ -3,14 +3,12 @@ package org.project.model.gameengine;
 import org.jetbrains.annotations.NotNull;
 import org.project.model.building.Building;
 import org.project.model.resource.Citizen;
-import org.project.model.resource.Material;
 import org.project.model.resource.Resources;
 import org.project.utils.Pair;
 import org.project.utils.Quantity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.project.model.building.BuildingFactory.*;
@@ -27,9 +25,9 @@ public final class City {
     private final Pair<Citizen, Quantity> workers = new Pair<>(new Citizen(), new Quantity());
 
     private final Shop shop;
-    private final ResourceUpdatable player;
+    private final ResourceManager player;
 
-    public City(@NotNull ResourceUpdatable player, Shop shop) {
+    public City(@NotNull ResourceManager player, Shop shop) {
         this.player = player;
         this.shop = shop;
     }
@@ -89,6 +87,17 @@ public final class City {
         this.underConstructionBuildings.put(UNDER_COUNTER, building);
         UNDER_COUNTER++;
 
+        return true;
+    }
+
+    public boolean updateBuilding(int key) {
+        if (!this.constructedBuildings.containsKey(key)) return false;
+        Building building = this.constructedBuildings.get(key);
+        if (!this.player.haveEnoughResources(building.getUpdateRequirements())) return false;
+        if (!building.canUpgrade()) return false;
+
+        this.player.removeFromStock(building.getUpdateRequirements());
+        building.upgrade();
         return true;
     }
 

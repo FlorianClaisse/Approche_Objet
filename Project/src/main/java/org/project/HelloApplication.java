@@ -33,6 +33,7 @@ public class HelloApplication /*extends Application*/ {
     }
 
     public static void main(String[] args) {
+        System.out.println(Math.ceil(1.1));
         do {
 
             prompt("Day : " + dayNumber + "\n" +
@@ -72,8 +73,6 @@ public class HelloApplication /*extends Application*/ {
                 dayNumber++;
             }
         } while(!gameIsOver());
-
-        // Savoir si il a gagné ou perdu
     }
 
     private static boolean gameIsOver() {
@@ -162,7 +161,7 @@ public class HelloApplication /*extends Application*/ {
     }
 
     private static void removeWorkers() {
-        StringBuilder builder = new StringBuilder("Remove workers\nWhich building ?");
+        StringBuilder builder = new StringBuilder("Remove workers :\nWhich building ?\n");
         Map<Integer, Building> buildings = city.getConstructedBuildings();
         buildings.forEach((id, b) -> builder.append("[").append(id).append("] ").append(b).append('\n'));
         prompt(builder.toString());
@@ -181,7 +180,7 @@ public class HelloApplication /*extends Application*/ {
     }
 
     private static void addWorkers() {
-        StringBuilder builder = new StringBuilder("Add workers\nWhich building ?");
+        StringBuilder builder = new StringBuilder("Add workers :\nWhich building ?\n");
         Map<Integer, Building> buildings = city.getConstructedBuildings();
         buildings.forEach((id, b) -> builder.append("[").append(id).append("] ").append(b).append('\n'));
         prompt(builder.toString());

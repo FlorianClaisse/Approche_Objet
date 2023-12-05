@@ -2,8 +2,12 @@ package org.project.model.building;
 
 import org.project.model.resource.Purchasable;
 import org.project.model.resource.Resources;
+import org.project.utils.Quantity;
+
+import java.util.stream.StreamSupport;
 
 public class Building implements Purchasable {
+    private static final int maxLevel = 10;
     private int level = 1;
     
     private final Type type;
@@ -13,6 +17,7 @@ public class Building implements Purchasable {
     private int currentWorkers;
     private int maxWorkers;
     private final Resources buildRequirements;
+    private final Resources updateRequirements;
     private final Resources consumption;
     private final Resources production;
     private final int buildTime;
@@ -31,12 +36,28 @@ public class Building implements Purchasable {
         this.maxWorkers = minWorkers;
 
         this.buildRequirements = buildRequirements;
+        Resources resources = new Resources();
+        buildRequirements.forEach((r, q) -> resources.put(r, new Quantity((int)Math.ceil(q.get() * 1.5))));
+        this.updateRequirements = resources;
         this.consumption = consumption;
         this.production = production;
 
         this.buildTime = buildTime;
         this.remainingTime = buildTime;
     }
+
+    public boolean canUpgrade() {
+        return this.level != maxLevel && this.type != Type.HOUSE && this.type != Type.APARTMENT_BUILDING;
+    }
+
+    public void upgrade() {
+        if (!canUpgrade()) throw new IllegalStateException("Please use canUpgrade before upgrade.");
+        this.level++;
+        this.maxWorkers = (int) Math.ceil(this.maxWorkers * 1.5);
+        this.updateRequirements.forEach((r, q) -> q.add((int)Math.ceil(q.get() * 1.5)));
+    }
+
+    public boolean isMaxLevel() { return this.level == maxLevel; }
 
     public boolean canAddWorkers(int quantity) {
         return (this.currentWorkers + quantity) <= this.maxWorkers;
@@ -73,8 +94,20 @@ public class Building implements Purchasable {
     public int getCurrentWorkers() { return this.currentWorkers; }
     public int getMaxWorkers() { return this.maxWorkers; }
     public Resources getBuildRequirements() { return this.buildRequirements; }
-    public Resources getConsumption() { return this.consumption; }
-    public Resources getProduction() { return this.production; }
+    public Resources getUpdateRequirements() { return this.updateRequirements; }
+
+    public Resources getConsumption() {
+        Resources resources = new Resources();
+        double ratio = this.currentWorkers / (double)this.minWorkers;
+        this.consumption.forEach((r, q) -> resources.put(r, new Quantity((int)Math.ceil(q.get() * ratio))));
+        return resources;
+    }
+    public Resources getProduction() {
+        Resources resources = new Resources();
+        double ratio = this.currentWorkers / (double)this.minWorkers;
+        this.production.forEach((r, q) -> resources.put(r, new Quantity((int)Math.ceil(q.get() * ratio))));
+        return resources;
+    }
     public int getBuildTime() { return this.buildTime; }
 
     @Override

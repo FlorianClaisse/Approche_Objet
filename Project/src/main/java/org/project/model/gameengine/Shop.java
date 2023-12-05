@@ -26,7 +26,7 @@ public final class Shop {
         return true;
     }
 
-    public boolean buyBuilding(Building building) {
+    protected boolean buyBuilding(Building building) {
         if (!this.buyer.canBuy(building, 1)) return false;
         if (!this.buyer.haveEnoughResources(building.getBuildRequirements())) return false;
 
