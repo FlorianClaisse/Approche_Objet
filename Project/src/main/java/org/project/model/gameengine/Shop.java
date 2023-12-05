@@ -9,30 +9,30 @@ import static org.project.model.building.BuildingFactory.*;
 import static org.project.model.resource.ResourceFactory.*;
 
 public final class Shop {
-    private final ShopDelegate delegate;
+    private final ShopDelegate buyer;
 
-    public Shop(ShopDelegate delegate) {
-        this.delegate = delegate;
+    public Shop(ShopDelegate player) {
+        this.buyer = player;
     }
 
-    public boolean buyMaterial(Material.Type type) {
+    public boolean buyMaterials(Material.Type type, int quantity) {
         Material material = this.getMaterial(type);
-        if (!this.delegate.canBuy(material)) return false;
+        if (!this.buyer.canBuy(material, quantity)) return false;
 
         Resources resources = new Resources();
-        resources.put(material, new Quantity(1));
+        resources.put(material, new Quantity(quantity));
 
-        this.delegate.buy(material);
-        this.delegate.addToStock(resources);
+        this.buyer.buy(material, quantity);
+        this.buyer.addToStock(resources);
         return true;
     }
 
     public boolean buyBuilding(Building building) {
-        if (!this.delegate.canBuy(building)) return false;
-        if (!this.delegate.haveEnoughtResources(building.getBuildRequirements())) return false;
+        if (!this.buyer.canBuy(building, 1)) return false;
+        if (!this.buyer.haveEnoughResources(building.getBuildRequirements())) return false;
 
-        this.delegate.buy(building);
-        this.delegate.removeFromStock(building.getBuildRequirements());
+        this.buyer.buy(building, 1);
+        this.buyer.removeFromStock(building.getBuildRequirements());
         return true;
     }
 

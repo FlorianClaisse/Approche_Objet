@@ -21,47 +21,69 @@ public final class City {
     private static int UNDER_COUNTER = 0;
 
     private final Map<Integer, Building> constructedBuildings =  new HashMap<>();
-    private final Map<Integer, Building> underConstruction =  new HashMap<>();
+    private final Map<Integer, Building> underConstructionBuildings =  new HashMap<>();
 
     private final Pair<Citizen, Quantity> habitants = new Pair<>(new Citizen(), new Quantity());
     private final Pair<Citizen, Quantity> workers = new Pair<>(new Citizen(), new Quantity());
 
     private final Shop shop;
-    private final ResourceUpdatable delegate;
+    private final ResourceUpdatable player;
 
-    public City(@NotNull ResourceUpdatable delegate, Shop shop) {
-        this.delegate = delegate;
+    public City(@NotNull ResourceUpdatable player, Shop shop) {
+        this.player = player;
         this.shop = shop;
     }
 
     public void dayEnd() {
-        this. updateResources();
+        this.constructedBuildings.forEach((id, b) -> {
+            this.player.addToStock(b.getProduction());
+            this.player.removeFromStock(b.getConsumption());
+        });
 
-        List<Integer> toBeRemoved = new ArrayList<>();
-        for (Map.Entry<Integer, Building> entry: this.underConstruction.entrySet()) {
+        for (Map.Entry<Integer, Building> entry: this.underConstructionBuildings.entrySet()) {
             Building building = entry.getValue();
             building.removeOnePeriod();
 
-            // Quand un édifice est fini de construire, il ne consomme des resources qu'au tour d'après.
             if (building.isBuilt()) {
                 this.habitants.getSecond().add(building.getNbHabitants());
                 this.workers.getSecond().add(building.getCurrentWorkers());
 
-                toBeRemoved.add(entry.getKey());
+                this.underConstructionBuildings.remove(entry.getKey());
                 this.constructedBuildings.put(BUILDING_COUNTER, building);
                 BUILDING_COUNTER++;
             }
         }
-        toBeRemoved.forEach(this.underConstruction::remove);
     }
 
-    public boolean addBuilding(@NotNull Building.Type type) {
-        Building building = this.getBuilding(type);
-        // Si on ne possede pas assez d'habitant libre pour travailler.
-        if ((this.freeInhabitant() + building.getNbHabitants()) - building.getMinWorkers() < 0) return false;
+    public Resources getCurrentProduction() {
+        Resources production = new Resources();
+        for(Map.Entry<Integer, Building> entry: this.constructedBuildings.entrySet()) {
+            Building building = entry.getValue();
+            production.putAll(building.getProduction());
+        }
+        return production;
+    }
+
+    public Resources getCurrentConsumption() {
+        Resources consumption = new Resources();
+        for(Map.Entry<Integer, Building> entry: this.constructedBuildings.entrySet()) {
+            Building building = entry.getValue();
+            consumption.putAll(building.getConsumption());
+        }
+        consumption.get(FOOD).add(habitants.getSecond().get());
+        return consumption;
+    }
+
+    public boolean purchaseBuilding(@NotNull Building.Type type) {
+        Building building = this.makeBuilding(type);
+
+        // Si il n'y a pas assez d'habitant libre pour travailler :
+        if (this.freeInhabitant() + building.getNbHabitants() - building.getMinWorkers() < 0) return false;
+
+        // Le player
         if (!this.shop.buyBuilding(building)) return false;
 
-        this.underConstruction.put(UNDER_COUNTER, building);
+        this.underConstructionBuildings.put(UNDER_COUNTER, building);
         UNDER_COUNTER++;
 
         return true;
@@ -75,8 +97,8 @@ public final class City {
         return true;
     }
 
-    public boolean removeUnderBuilding(int key) {
-        if (!this.underConstruction.containsKey(key)) return false;
+    public boolean removeUnderConstructionBuilding(int key) {
+        if (!this.underConstructionBuildings.containsKey(key)) return false;
         this.constructedBuildings.remove(key);
         return true;
     }
@@ -110,20 +132,13 @@ public final class City {
         return this.constructedBuildings;
     }
 
-    public Map<Integer, Building> getUnderConstruction() {
-        return this.underConstruction;
+    public Map<Integer, Building> getUnderConstructionBuildings() {
+        return this.underConstructionBuildings;
     }
 
     private int freeInhabitant() { return this.habitants.getSecond().get() - this.workers.getSecond().get(); }
 
-    private void updateResources() {
-        this.constructedBuildings.forEach((id, b) -> {
-            this.delegate.addToStock(b.getProduction());
-            this.delegate.removeFromStock(b.getConsumption());
-        });
-    }
-
-    private Building getBuilding(Building.Type type) {
+    private Building makeBuilding(Building.Type type) {
         return switch (type) {
             case APARTMENT_BUILDING -> makeApartment();
             case WOODEN_CABIN -> makeWoodenCabin();
