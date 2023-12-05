@@ -7,7 +7,7 @@ import org.project.utils.Quantity;
 import java.util.stream.StreamSupport;
 
 public class Building implements Purchasable {
-    private static final int maxLevel = 10;
+    private static final int maxLevel = 5;
     private int level = 1;
     
     private final Type type;

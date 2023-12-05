@@ -2,6 +2,7 @@ package org.project.model.gameengine;
 
 import org.jetbrains.annotations.NotNull;
 import org.project.model.building.Building;
+import org.project.model.building.BuildingFactory;
 import org.project.model.resource.Citizen;
 import org.project.model.resource.Resources;
 import org.project.utils.Pair;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.project.model.building.BuildingFactory.*;
-import static org.project.model.resource.Material.Type.FOOD;
+import static org.project.model.resource.ResourceFactory.food;
 
 public final class City {
     private static int BUILDING_COUNTER = 0;
@@ -56,6 +57,14 @@ public final class City {
         toBeRemoved.forEach(this.underConstructionBuildings::remove);
     }
 
+    public boolean isWinning() {
+        for (Building building: this.constructedBuildings.values()) {
+            if (building.isMaxLevel() && building.getTypeName().equals(BuildingFactory.makeToolFactory().getTypeName()))
+                return true;
+        }
+        return false;
+    }
+
     public Resources getCurrentProduction() {
         Resources production = new Resources();
         for(Map.Entry<Integer, Building> entry: this.constructedBuildings.entrySet()) {
@@ -71,7 +80,7 @@ public final class City {
             Building building = entry.getValue();
             consumption.putAll(building.getConsumption());
         }
-        consumption.get(FOOD).add(habitants.getSecond().get());
+        consumption.get(food()).add(habitants.getSecond().get());
         return consumption;
     }
 

@@ -6,6 +6,7 @@ import org.project.model.resource.Material;
 import org.project.model.resource.Purchasable;
 import org.project.model.resource.Resources;
 import org.project.utils.Quantity;
+import org.project.utils.Result;
 
 import java.util.Map;
 import java.util.Scanner;
@@ -64,21 +65,30 @@ public class HelloApplication /*extends Application*/ {
                 case 9 -> removeBuilding(city.getUnderConstructionBuildings(), true);
                 case 10 -> addWorkers();
                 case 11 -> removeWorkers();
-                case 12 -> {}
+                case 12 -> upgrade();
+                case 13 -> {}
                 default -> prompt("Please enter a valid number.");
             }
 
-            if (result == 6 || result == 7 || result == 8 || result == 9 || result == 10 || result == 11 || result == 12) {
+            if (result >= 6 && result <= 13) {
                 city.dayEnd();
                 dayNumber++;
             }
         } while(!gameIsOver());
+
+        System.out.println(isWinning() ? "You Won :)" : "You Lost :(");
     }
 
     private static boolean gameIsOver() {
         Resources resources = new Resources();
         resources.initWithAllResources();
-        return !player.haveEnoughResources(resources);
+        return !player.haveEnoughResources(resources) || city.isWinning();
+    }
+
+    private static boolean isWinning() {
+        Resources resources = new Resources();
+        resources.initWithAllResources();
+        return player.haveEnoughResources(resources);
     }
 
     private static void printResources(Resources resources) {
@@ -196,5 +206,9 @@ public class HelloApplication /*extends Application*/ {
 
         if (!city.addWorkersToBuilding(res, quantity))
             System.out.println("Unable to add workers");
+    }
+
+    private static void upgrade() {
+
     }
 }
