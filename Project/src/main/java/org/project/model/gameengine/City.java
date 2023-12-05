@@ -40,6 +40,7 @@ public final class City {
             this.player.removeFromStock(b.getConsumption());
         });
 
+        ArrayList<Integer> toBeRemoved = new ArrayList<>();
         for (Map.Entry<Integer, Building> entry: this.underConstructionBuildings.entrySet()) {
             Building building = entry.getValue();
             building.removeOnePeriod();
@@ -48,11 +49,13 @@ public final class City {
                 this.habitants.getSecond().add(building.getNbHabitants());
                 this.workers.getSecond().add(building.getCurrentWorkers());
 
-                this.underConstructionBuildings.remove(entry.getKey());
                 this.constructedBuildings.put(BUILDING_COUNTER, building);
                 BUILDING_COUNTER++;
+
+                toBeRemoved.add(entry.getKey());
             }
         }
+        toBeRemoved.forEach(this.underConstructionBuildings::remove);
     }
 
     public Resources getCurrentProduction() {

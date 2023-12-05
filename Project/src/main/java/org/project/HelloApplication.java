@@ -67,11 +67,19 @@ public class HelloApplication /*extends Application*/ {
                 default -> prompt("Please enter a valid number.");
             }
 
-            if (result == 4 || result == 7 || result == 8 || result == 9 || result == 10 || result == 11) {
+            if (result == 6 || result == 7 || result == 8 || result == 9 || result == 10 || result == 11 || result == 12) {
                 city.dayEnd();
                 dayNumber++;
             }
-        } while(true); // ???
+        } while(!gameIsOver());
+
+        // Savoir si il a gagné ou perdu
+    }
+
+    private static boolean gameIsOver() {
+        Resources resources = new Resources();
+        resources.initWithAllResources();
+        return !player.haveEnoughResources(resources);
     }
 
     private static void printResources(Resources resources) {
