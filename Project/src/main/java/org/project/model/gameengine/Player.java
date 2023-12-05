@@ -11,13 +11,20 @@ public final class Player implements ShopDelegate {
     private final Resources stock = new Resources();
 
     public Player() {
-        // On initialise le joueur avec toutes les resources du jeu à 0.
+        // On initialise le stock du joueur avec toutes les resources du jeu à 0.
         stock.initWithAllResources();
 
         // On lui donne des ressources de base
         stock.get(wood()).add(10);
         stock.get(food()).add(10);
         stock.get(gold()).add(10);
+
+        /* Pour tester...
+        for(Material.Type type : Material.Type.values()) {
+            stock.get(new Material(type)).add(10000);
+        }
+        stock.get(gold()).add(10000);
+        */
     }
 
     public Resources getStock() {

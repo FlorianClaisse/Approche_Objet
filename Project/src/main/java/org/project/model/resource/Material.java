@@ -12,18 +12,15 @@ public final class Material implements Purchasable {
     }
 
     @Override public String getTypeName() { return this.type.rawValue; }
+    @Override public String toString() { return this.type.rawValue; }
     @Override public int getPrice() { return this.price; }
-
     @Override public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Material material = (Material) o;
         return type == material.type;
     }
-
     @Override public int hashCode() { return Objects.hash(this.type); }
-
-    @Override public String toString() { return this.type.rawValue + "(price=" + this.price + ")"; }
 
     public enum Type {
         FOOD("Food", 1),

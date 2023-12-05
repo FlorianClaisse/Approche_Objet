@@ -38,6 +38,10 @@ public final class City {
             this.player.addToStock(b.getProduction());
             this.player.removeFromStock(b.getConsumption());
         });
+        Resources habitantsConsumption = new Resources();
+        habitantsConsumption.initWithAllResources();
+        habitantsConsumption.get(food()).add(habitants.getSecond().get());
+        this.player.removeFromStock(habitantsConsumption);
 
         ArrayList<Integer> toBeRemoved = new ArrayList<>();
         for (Map.Entry<Integer, Building> entry: this.underConstructionBuildings.entrySet()) {
@@ -67,18 +71,20 @@ public final class City {
 
     public Resources getCurrentProduction() {
         Resources production = new Resources();
+        production.initWithAllResources();
         for(Map.Entry<Integer, Building> entry: this.constructedBuildings.entrySet()) {
             Building building = entry.getValue();
-            production.putAll(building.getProduction());
+            building.getProduction().forEach((r, q) -> production.get(r).add(q.get()));
         }
         return production;
     }
 
     public Resources getCurrentConsumption() {
         Resources consumption = new Resources();
+        consumption.initWithAllResources();
         for(Map.Entry<Integer, Building> entry: this.constructedBuildings.entrySet()) {
             Building building = entry.getValue();
-            consumption.putAll(building.getConsumption());
+            building.getConsumption().forEach((r, q) -> consumption.get(r).add(q.get()));
         }
         consumption.get(food()).add(habitants.getSecond().get());
         return consumption;
@@ -87,10 +93,10 @@ public final class City {
     public boolean purchaseBuilding(@NotNull Building.Type type) {
         Building building = this.makeBuilding(type);
 
-        // Si il n'y a pas assez d'habitant libre pour travailler :
+        // Il doit y avoir assez d'habitants libres pour travailler
         if (this.freeInhabitant() + building.getNbHabitants() - building.getMinWorkers() < 0) return false;
 
-        // Le player
+        // Le player doit avoir assez de ressources
         if (!this.shop.buyBuilding(building)) return false;
 
         this.underConstructionBuildings.put(UNDER_COUNTER, building);
@@ -99,51 +105,50 @@ public final class City {
         return true;
     }
 
-    public boolean updateBuilding(int key) {
-        if (!this.constructedBuildings.containsKey(key)) return false;
+    public boolean upgradeBuilding(int key) {
+        if (!this.constructedBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
         Building building = this.constructedBuildings.get(key);
         if (!this.player.haveEnoughResources(building.getUpdateRequirements())) return false;
-        if (!building.canUpgrade()) return false;
+        if (!building.canBeUpgraded()) return false;
 
         this.player.removeFromStock(building.getUpdateRequirements());
         building.upgrade();
         return true;
     }
 
-    public boolean removeExistingBuilding(int key) {
-        if (!this.constructedBuildings.containsKey(key)) return false;
+    public void removeExistingBuilding(int key) {
+        if (!this.constructedBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
         this.habitants.getSecond().remove(this.constructedBuildings.get(key).getNbHabitants());
         this.workers.getSecond().remove(this.constructedBuildings.get(key).getCurrentWorkers());
         this.constructedBuildings.remove(key);
-        return true;
     }
 
-    public boolean removeUnderConstructionBuilding(int key) {
-        if (!this.underConstructionBuildings.containsKey(key)) return false;
+    public void removeUnderConstructionBuilding(int key) {
+        if (!this.underConstructionBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
         this.constructedBuildings.remove(key);
-        return true;
     }
 
     public boolean addWorkersToBuilding(int key, int quantity) {
-        if (freeInhabitant() - quantity < 0) return false;
-        if (!this.constructedBuildings.containsKey(key)) return false;
+        if (!this.constructedBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
 
+        // Il doit y avoir assez d'habitants qui ne travaillent pas déjà
+        if (freeInhabitant() - quantity < 0) return false;
+
+        // Il ne doit pas y avoir plus de travailleurs dans le building que son maximum
         Building building = this.constructedBuildings.get(key);
         if (!building.canAddWorkers(quantity)) return false;
 
-        this.habitants.getSecond().remove(quantity);
         this.workers.getSecond().add(quantity);
         building.addWorkers(quantity);
         return true;
     }
 
     public boolean removeWorkersFromBuilding(int key, int quantity) {
-        if (!this.constructedBuildings.containsKey(key)) return false;
+        if (!this.constructedBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
 
         Building building = this.constructedBuildings.get(key);
         if (!building.canRemoveWorkers(quantity)) return false;
 
-        this.habitants.getSecond().add(quantity);
         this.workers.getSecond().remove(quantity);
         building.removeWorkers(quantity);
         return true;
@@ -155,6 +160,14 @@ public final class City {
 
     public Map<Integer, Building> getUnderConstructionBuildings() {
         return this.underConstructionBuildings;
+    }
+
+    public int getNbHabitants() {
+        return this.habitants.getSecond().get();
+    }
+
+    public int getNbWorkers() {
+        return this.workers.getSecond().get();
     }
 
     private int freeInhabitant() { return this.habitants.getSecond().get() - this.workers.getSecond().get(); }
