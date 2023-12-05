@@ -125,7 +125,7 @@ public final class City {
 
     public void removeUnderConstructionBuilding(int key) {
         if (!this.underConstructionBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
-        this.constructedBuildings.remove(key);
+        this.underConstructionBuildings.remove(key);
     }
 
     public boolean addWorkersToBuilding(int key, int quantity) {

@@ -49,8 +49,8 @@ public class HelloApplication /*extends Application*/ {
                    [6] Buy materials with gold
                    [7] Build a new building (*)
                    [8] Upgrade a building (*)
-                   [9] Remove constructed building 
-                   [10] Remove building under construction
+                   [9] Remove constructed building (*)
+                   [10] Remove building under construction (*)
                    [11] Add workers to constructed building
                    [12] Remove workers from constructed building
                    [13] Nothing (*)
@@ -74,7 +74,7 @@ public class HelloApplication /*extends Application*/ {
                 default -> prompt("Please enter a valid number.");
             }
 
-            if (result == 7 || result == 8 || result == 13) {
+            if ((result >= 7 && result <= 10) || result == 13) {
                 city.dayEnd();
                 dayNumber++;
             }
