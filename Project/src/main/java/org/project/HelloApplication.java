@@ -18,6 +18,7 @@ public class HelloApplication /*extends Application*/ {
     private static final Player player = new Player();
     private static final Shop shop = new Shop(player);
     private static final City city = new City(player, shop);
+    private static boolean rollback = false;
 
     private static void prompt(String message) {
         System.out.println("---------------------------");
@@ -72,6 +73,13 @@ public class HelloApplication /*extends Application*/ {
                 case 12 -> removeWorkers();
                 case 13 -> {}
                 default -> prompt("Please enter a valid number.");
+            }
+
+            // Pour éviter de sauter un jour si l'action joueur n'aboutit pas
+            // Par exemple s'il entre une valeur invalide
+            if(rollback) {
+                rollback = false;
+                continue;
             }
 
             if ((result >= 7 && result <= 10) || result == 13) {
@@ -139,11 +147,14 @@ public class HelloApplication /*extends Application*/ {
         int type = getInt();
         if (type < 0 || type >= buildingTypes.length) {
             System.out.println("Please provide a valid type.");
+            rollback = true;
             return;
         }
 
-        if (!city.purchaseBuilding(buildingTypes[type]))
+        if (!city.purchaseBuilding(buildingTypes[type])) {
             System.out.println("You don't have enough resources to build this building.");
+            rollback = true;
+        }
     }
 
     private static void upgradeBuilding() {
@@ -155,11 +166,14 @@ public class HelloApplication /*extends Application*/ {
         int id = getInt();
         if (!buildings.containsKey(id)) {
             System.out.println("Please provide a valid building id");
+            rollback = true;
             return;
         }
 
-        if (!city.upgradeBuilding(id))
+        if (!city.upgradeBuilding(id)) {
             System.out.println("This building can't be upgraded further or you don't have enough resources to upgrade it.");
+            rollback = true;
+        }
     }
 
     private static void removeBuilding(Map<Integer, Building> buildings, boolean under) {
@@ -170,6 +184,7 @@ public class HelloApplication /*extends Application*/ {
         int id = getInt();
         if (!buildings.containsKey(id)) {
             System.out.println("Please provide a valid building id");
+            rollback = true;
             return;
         }
 
