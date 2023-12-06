@@ -118,13 +118,31 @@ public final class City {
 
     public void removeExistingBuilding(int key) {
         if (!this.constructedBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
-        this.habitants.getSecond().remove(this.constructedBuildings.get(key).getNbHabitants());
-        this.workers.getSecond().remove(this.constructedBuildings.get(key).getCurrentWorkers());
+        Building building = this.constructedBuildings.get(key);
+
+        this.habitants.getSecond().remove(building.getNbHabitants());
+        this.workers.getSecond().remove(building.getCurrentWorkers());
+
+        // Lorsqu'un bâtiment est détruit le player récupère 1/4 des matériaux utilisés pour le construire
+        Resources buildingRequirements = building.getBuildRequirements();
+        Resources recoveredMaterials = new Resources();
+        recoveredMaterials.initWithAllResources();
+        buildingRequirements.forEach((r, q) -> recoveredMaterials.get(r).add(q.get() / 4));
+        this.player.addToStock(recoveredMaterials);
+
         this.constructedBuildings.remove(key);
     }
 
     public void removeUnderConstructionBuilding(int key) {
         if (!this.underConstructionBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
+
+        // Lorsqu'un bâtiment en cours de construction est détruit le player récupère 1/2 des matériaux utilisés pour le construire
+        Resources buildingRequirements = this.underConstructionBuildings.get(key).getBuildRequirements();
+        Resources recoveredMaterials = new Resources();
+        recoveredMaterials.initWithAllResources();
+        buildingRequirements.forEach((r, q) -> recoveredMaterials.get(r).add(q.get() / 2));
+        this.player.addToStock(recoveredMaterials);
+
         this.underConstructionBuildings.remove(key);
     }
 

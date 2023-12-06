@@ -4,8 +4,6 @@ import org.project.model.resource.Purchasable;
 import org.project.model.resource.Resources;
 import org.project.utils.Quantity;
 
-import java.util.stream.StreamSupport;
-
 public class Building implements Purchasable {
     private static final int maxLevel = 5;
     private int level = 1;
