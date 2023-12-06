@@ -7,7 +7,6 @@ import org.project.utils.Quantity;
 public class Building implements Purchasable {
     private static final int maxLevel = 5;
     private int level = 1;
-    
     private final Type type;
     private final int price;
     private final int nbHabitants;
@@ -54,7 +53,7 @@ public class Building implements Purchasable {
         this.maxWorkers = (int) Math.ceil(this.maxWorkers * 1.5);
 
         // New requirements for future upgrade
-        this.updateRequirements.forEach((r, q) -> q.add((int)Math.ceil(q.get() * 1.5)));
+        this.updateRequirements.forEach((r, q) -> q.set((int)Math.ceil(q.get() * 1.5)));
     }
 
     public boolean isMaxLevel() { return this.level == maxLevel; }
@@ -84,11 +83,13 @@ public class Building implements Purchasable {
 
     public boolean isBuilt() { return this.remainingTime == 0; }
 
+    public Type getType() { return this.type; }
     @Override public String getTypeName() { return this.type.rawValue; }
     @Override public int getPrice() { return this.price; }
     public int getNbHabitants() { return this.nbHabitants; }
     public int getMinWorkers() { return this.minWorkers; }
     public int getCurrentWorkers() { return this.currentWorkers; }
+    public int getMaxWorkers() { return this.maxWorkers; }
     public Resources getBuildRequirements() { return this.buildRequirements; }
     public Resources getUpdateRequirements() { return this.updateRequirements; }
 
@@ -131,8 +132,7 @@ public class Building implements Purchasable {
         CEMENT_PLANT("Cement Plant"),
         STEEL_MILL("Steel Mill"),
         TOOL_FACTORY("Tool Factory"),
-        LAUNCHING_PLATFORM("Launching Platform");
-
+        LAUNCHING_ROCKET_PLATFORM("Launching Rocket Platform");
 
         private final String rawValue;
 

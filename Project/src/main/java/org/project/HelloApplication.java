@@ -39,7 +39,7 @@ public class HelloApplication /*extends Application*/ {
         do {
             prompt("Day : " + dayNumber + '\n' +
                    "Total habitants : " + city.getNbHabitants() + '\n' +
-                   "Future total : "  + city.getFutureTotalHabitants() + '\n' +
+                   "Future habitants : "  + city.getNbFutureHabitants() + '\n' +
                    "Current workers : " + city.getNbWorkers() + '\n' +
                    "Future workers : " + city.getNbFutureWorkers() + '\n' +
                    "---------------------------" + '\n' +

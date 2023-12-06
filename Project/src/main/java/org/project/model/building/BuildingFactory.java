@@ -125,13 +125,15 @@ public class BuildingFactory {
                 .build();
     }
 
-    public static Building makeLaunchingPlatform() {
+    public static Building makeLaunchingRocketPlatform() {
         return BuildingBuilder.newBuilder()
-                .setType(LAUNCHING_PLATFORM)
+                .setType(LAUNCHING_ROCKET_PLATFORM)
                 .setMinWorkers(100)
                 .setPrice(10)
                 .addBuildRequirement(cement(), 50)
                 .addBuildRequirement(tools(), 50)
+                .addBuildRequirement(steel(), 50)
+                .addBuildRequirement(coal(), 50)
                 .setBuildTime(10)
                 .build();
     }

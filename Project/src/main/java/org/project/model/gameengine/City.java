@@ -44,8 +44,8 @@ public final class City {
     public int getNbHabitants() {
         return this.habitants.get();
     }
-    public int getFutureTotalHabitants() {
-        return this.habitants.get() + this.futureHabitants.get();
+    public int getNbFutureHabitants() {
+        return this.futureHabitants.get();
     }
     public int getNbFutureWorkers() {
         return this.futureWorkers.get();
@@ -73,8 +73,8 @@ public final class City {
             building.removeOnePeriod();
 
             if (building.isBuilt()) {
-                this.futureHabitants.remove(building.getNbHabitants());
                 this.habitants.add(building.getNbHabitants());
+                this.futureHabitants.remove(building.getNbHabitants());
                 this.futureWorkers.remove(building.getCurrentWorkers());
                 this.workers.add(building.getCurrentWorkers());
 
@@ -194,7 +194,7 @@ public final class City {
 
     public boolean isWinning() {
         for (Building building : this.constructedBuildings.values()) {
-            if (building.getTypeName().equals(BuildingFactory.makeLaunchingPlatform().getTypeName()) && building.isMaxLevel())
+            if (building.getType().equals(Building.Type.LAUNCHING_ROCKET_PLATFORM) && building.isMaxLevel() && building.getCurrentWorkers() == building.getMaxWorkers())
                 return true;
         }
         return false;
@@ -211,7 +211,7 @@ public final class City {
             case HOUSE -> makeHouse();
             case LUMBER_MILL -> makeLumberMill();
             case STEEL_MILL -> makeSteelMill();
-            case LAUNCHING_PLATFORM -> makeLaunchingPlatform();
+            case LAUNCHING_ROCKET_PLATFORM -> makeLaunchingRocketPlatform();
         };
     }
 }
