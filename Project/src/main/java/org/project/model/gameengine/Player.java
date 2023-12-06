@@ -21,9 +21,9 @@ public final class Player implements ShopDelegate {
 
         /* Pour tester...
         for(Material.Type type : Material.Type.values()) {
-            stock.get(new Material(type)).add(10000);
+            stock.get(new Material(type)).add(99999);
         }
-        stock.get(gold()).add(10000);
+        stock.get(gold()).add(99999);
         */
     }
 

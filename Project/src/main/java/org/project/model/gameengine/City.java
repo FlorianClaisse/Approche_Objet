@@ -3,9 +3,7 @@ package org.project.model.gameengine;
 import org.jetbrains.annotations.NotNull;
 import org.project.model.building.Building;
 import org.project.model.building.BuildingFactory;
-import org.project.model.resource.Citizen;
 import org.project.model.resource.Resources;
-import org.project.utils.Pair;
 import org.project.utils.Quantity;
 
 import java.util.ArrayList;
@@ -22,8 +20,12 @@ public final class City {
     private final Map<Integer, Building> constructedBuildings =  new HashMap<>();
     private final Map<Integer, Building> underConstructionBuildings =  new HashMap<>();
 
-    private final Pair<Citizen, Quantity> habitants = new Pair<>(new Citizen(), new Quantity());
-    private final Pair<Citizen, Quantity> workers = new Pair<>(new Citizen(), new Quantity());
+    private final Quantity habitants = new Quantity();
+    private final Quantity futureHabitants = new Quantity();
+
+
+    private final Quantity futureWorkers = new Quantity();
+    private final Quantity workers = new Quantity();
 
     private final Shop shop;
     private final ResourceManager player;
@@ -40,13 +42,19 @@ public final class City {
         return this.underConstructionBuildings;
     }
     public int getNbHabitants() {
-        return this.habitants.getSecond().get();
+        return this.habitants.get();
+    }
+    public int getFutureTotalHabitants() {
+        return this.habitants.get() + this.futureHabitants.get();
+    }
+    public int getNbFutureWorkers() {
+        return this.futureWorkers.get();
     }
     public int getNbWorkers() {
-        return this.workers.getSecond().get();
+        return this.workers.get();
     }
-    private int getFreeInhabitant() {
-        return this.habitants.getSecond().get() - this.workers.getSecond().get();
+    private int getFreeHabitants() {
+        return (this.habitants.get() + this.futureHabitants.get()) - (this.futureWorkers.get() + this.workers.get());
     }
 
     public void dayEnd() {
@@ -56,7 +64,7 @@ public final class City {
         });
         Resources habitantsConsumption = new Resources();
         habitantsConsumption.initWithAllResources();
-        habitantsConsumption.get(food()).add(habitants.getSecond().get());
+        habitantsConsumption.get(food()).add(habitants.get());
         this.player.removeFromStock(habitantsConsumption);
 
         ArrayList<Integer> toBeRemoved = new ArrayList<>();
@@ -65,8 +73,10 @@ public final class City {
             building.removeOnePeriod();
 
             if (building.isBuilt()) {
-                this.habitants.getSecond().add(building.getNbHabitants());
-                this.workers.getSecond().add(building.getCurrentWorkers());
+                this.futureHabitants.remove(building.getNbHabitants());
+                this.habitants.add(building.getNbHabitants());
+                this.futureWorkers.remove(building.getCurrentWorkers());
+                this.workers.add(building.getCurrentWorkers());
 
                 this.constructedBuildings.put(BUILDING_COUNTER, building);
                 BUILDING_COUNTER++;
@@ -94,7 +104,7 @@ public final class City {
             Building building = entry.getValue();
             building.getConsumption().forEach((r, q) -> consumption.get(r).add(q.get()));
         }
-        consumption.get(food()).add(habitants.getSecond().get());
+        consumption.get(food()).add(habitants.get());
         return consumption;
     }
 
@@ -102,11 +112,13 @@ public final class City {
         Building building = this.makeBuilding(type);
 
         // Il doit y avoir assez d'habitants libres pour travailler
-        if (this.getFreeInhabitant() + building.getNbHabitants() - building.getMinWorkers() < 0) return false;
+        if (this.getFreeHabitants() + building.getNbHabitants() - building.getMinWorkers() < 0) return false;
 
         // Le player doit avoir assez de ressources
         if (!this.shop.buyBuilding(building)) return false;
 
+        this.futureHabitants.add(building.getNbHabitants());
+        this.futureWorkers.add(building.getMinWorkers());
         this.underConstructionBuildings.put(UNDER_COUNTER, building);
         UNDER_COUNTER++;
 
@@ -128,8 +140,8 @@ public final class City {
         if (!this.constructedBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
         Building building = this.constructedBuildings.get(key);
 
-        this.habitants.getSecond().remove(building.getNbHabitants());
-        this.workers.getSecond().remove(building.getCurrentWorkers());
+        this.habitants.remove(building.getNbHabitants());
+        this.workers.remove(building.getCurrentWorkers());
 
         // Lorsqu'un bâtiment est détruit le player récupère 1/4 des matériaux utilisés pour le construire
         Resources buildingRequirements = building.getBuildRequirements();
@@ -158,13 +170,13 @@ public final class City {
         if (!this.constructedBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
 
         // Il doit y avoir assez d'habitants qui ne travaillent pas déjà
-        if (getFreeInhabitant() - quantity < 0) return false;
+        if (getFreeHabitants() - quantity < 0) return false;
 
         // Il ne doit pas y avoir plus de travailleurs dans le building que son maximum
         Building building = this.constructedBuildings.get(key);
         if (!building.canAddWorkers(quantity)) return false;
 
-        this.workers.getSecond().add(quantity);
+        this.workers.add(quantity);
         building.addWorkers(quantity);
         return true;
     }
@@ -175,7 +187,7 @@ public final class City {
         Building building = this.constructedBuildings.get(key);
         if (!building.canRemoveWorkers(quantity)) return false;
 
-        this.workers.getSecond().remove(quantity);
+        this.workers.remove(quantity);
         building.removeWorkers(quantity);
         return true;
     }

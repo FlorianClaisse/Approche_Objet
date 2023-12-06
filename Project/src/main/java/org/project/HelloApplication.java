@@ -39,7 +39,9 @@ public class HelloApplication /*extends Application*/ {
         do {
             prompt("Day : " + dayNumber + '\n' +
                    "Total habitants : " + city.getNbHabitants() + '\n' +
-                   "Habitants working : " + city.getNbWorkers() + '\n' +
+                   "Future total : "  + city.getFutureTotalHabitants() + '\n' +
+                   "Current workers : " + city.getNbWorkers() + '\n' +
+                   "Future workers : " + city.getNbFutureWorkers() + '\n' +
                    "---------------------------" + '\n' +
                    """
                    [1] View your resources
@@ -152,7 +154,7 @@ public class HelloApplication /*extends Application*/ {
         }
 
         if (!city.purchaseBuilding(buildingTypes[type])) {
-            System.out.println("You don't have enough resources to build this building.");
+            System.out.println("You don't have enough resources or free habitants to build this building.");
             rollback = true;
         }
     }
