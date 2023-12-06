@@ -33,6 +33,22 @@ public final class City {
         this.shop = shop;
     }
 
+    public Map<Integer, Building> getConstructedBuildings() {
+        return this.constructedBuildings;
+    }
+    public Map<Integer, Building> getUnderConstructionBuildings() {
+        return this.underConstructionBuildings;
+    }
+    public int getNbHabitants() {
+        return this.habitants.getSecond().get();
+    }
+    public int getNbWorkers() {
+        return this.workers.getSecond().get();
+    }
+    private int getFreeInhabitant() {
+        return this.habitants.getSecond().get() - this.workers.getSecond().get();
+    }
+
     public void dayEnd() {
         this.constructedBuildings.forEach((id, b) -> {
             this.player.addToStock(b.getProduction());
@@ -61,14 +77,6 @@ public final class City {
         toBeRemoved.forEach(this.underConstructionBuildings::remove);
     }
 
-    public boolean isWinning() {
-        for (Building building: this.constructedBuildings.values()) {
-            if (building.isMaxLevel() && building.getTypeName().equals(BuildingFactory.makeToolFactory().getTypeName()))
-                return true;
-        }
-        return false;
-    }
-
     public Resources getCurrentProduction() {
         Resources production = new Resources();
         production.initWithAllResources();
@@ -94,7 +102,7 @@ public final class City {
         Building building = this.makeBuilding(type);
 
         // Il doit y avoir assez d'habitants libres pour travailler
-        if (this.freeInhabitant() + building.getNbHabitants() - building.getMinWorkers() < 0) return false;
+        if (this.getFreeInhabitant() + building.getNbHabitants() - building.getMinWorkers() < 0) return false;
 
         // Le player doit avoir assez de ressources
         if (!this.shop.buyBuilding(building)) return false;
@@ -150,7 +158,7 @@ public final class City {
         if (!this.constructedBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
 
         // Il doit y avoir assez d'habitants qui ne travaillent pas déjà
-        if (freeInhabitant() - quantity < 0) return false;
+        if (getFreeInhabitant() - quantity < 0) return false;
 
         // Il ne doit pas y avoir plus de travailleurs dans le building que son maximum
         Building building = this.constructedBuildings.get(key);
@@ -172,23 +180,13 @@ public final class City {
         return true;
     }
 
-    public Map<Integer, Building> getConstructedBuildings() {
-        return this.constructedBuildings;
+    public boolean isWinning() {
+        for (Building building : this.constructedBuildings.values()) {
+            if (building.getTypeName().equals(BuildingFactory.makeLaunchingPlatform().getTypeName()) && building.isMaxLevel())
+                return true;
+        }
+        return false;
     }
-
-    public Map<Integer, Building> getUnderConstructionBuildings() {
-        return this.underConstructionBuildings;
-    }
-
-    public int getNbHabitants() {
-        return this.habitants.getSecond().get();
-    }
-
-    public int getNbWorkers() {
-        return this.workers.getSecond().get();
-    }
-
-    private int freeInhabitant() { return this.habitants.getSecond().get() - this.workers.getSecond().get(); }
 
     private Building makeBuilding(Building.Type type) {
         return switch (type) {
@@ -201,6 +199,7 @@ public final class City {
             case HOUSE -> makeHouse();
             case LUMBER_MILL -> makeLumberMill();
             case STEEL_MILL -> makeSteelMill();
+            case LAUNCHING_PLATFORM -> makeLaunchingPlatform();
         };
     }
 }

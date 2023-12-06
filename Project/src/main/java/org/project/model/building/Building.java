@@ -130,7 +130,9 @@ public class Building implements Purchasable {
         LUMBER_MILL("Lumber Mill"),
         CEMENT_PLANT("Cement Plant"),
         STEEL_MILL("Steel Mill"),
-        TOOL_FACTORY("Tool Factory");
+        TOOL_FACTORY("Tool Factory"),
+        LAUNCHING_PLATFORM("Launching Platform");
+
 
         private final String rawValue;
 

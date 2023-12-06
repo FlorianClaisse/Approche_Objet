@@ -14,11 +14,11 @@ import java.util.Scanner;
 
 public class HelloApplication /*extends Application*/ {
     private static int dayNumber = 0;
+    private static boolean rollback = false;
     private static final Scanner scanner = new Scanner(System.in);
     private static final Player player = new Player();
     private static final Shop shop = new Shop(player);
     private static final City city = new City(player, shop);
-    private static boolean rollback = false;
 
     private static void prompt(String message) {
         System.out.println("---------------------------");
@@ -243,7 +243,7 @@ public class HelloApplication /*extends Application*/ {
     private static boolean gameIsOver() {
         Resources resources = new Resources();
         resources.initWithAllResources();
-        return !player.haveEnoughResources(resources) || city.isWinning();
+        return (!player.haveEnoughResources(resources) || city.isWinning());
     }
 
     private static boolean isWinning() {

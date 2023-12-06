@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public final class Gold implements Resource {
 
-    public Gold() { }
+    public Gold() {}
 
     @Override  public String getTypeName() { return "Gold"; }
 

@@ -124,4 +124,15 @@ public class BuildingFactory {
                 .setBuildTime(8)
                 .build();
     }
+
+    public static Building makeLaunchingPlatform() {
+        return BuildingBuilder.newBuilder()
+                .setType(LAUNCHING_PLATFORM)
+                .setMinWorkers(100)
+                .setPrice(10)
+                .addBuildRequirement(cement(), 50)
+                .addBuildRequirement(tools(), 50)
+                .setBuildTime(10)
+                .build();
+    }
 }
