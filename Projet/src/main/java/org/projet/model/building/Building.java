@@ -6,7 +6,9 @@ import org.projet.utils.Quantity;
 
 public class Building implements Purchasable {
     private static final int maxLevel = 5;
+
     private int level = 1;
+
     private final Type type;
     private final int price;
     private final int nbHabitants;
