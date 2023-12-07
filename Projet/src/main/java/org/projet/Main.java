@@ -138,7 +138,7 @@ public class Main {
 
     private static void buildNewBuilding() {
         Building.Type[] buildingTypes = Building.Type.values();
-        StringBuilder stringBuilder = new StringBuilder("Which type of building\n");
+        StringBuilder stringBuilder = new StringBuilder("Which type of building ?\n");
         for (int i = 0; i < buildingTypes.length; i++) {
             stringBuilder.append("[").append(i).append("] ").append(buildingTypes[i]).append('\n');
         }

@@ -92,8 +92,8 @@ public class Building implements Purchasable {
     public int getMinWorkers() { return this.minWorkers; }
     public int getCurrentWorkers() { return this.currentWorkers; }
     public int getMaxWorkers() { return this.maxWorkers; }
-    public Resources getBuildRequirements() { return this.buildRequirements; }
-    public Resources getUpdateRequirements() { return this.updateRequirements; }
+    public Resources getBuildRequirements() { return new Resources(this.buildRequirements); }
+    public Resources getUpdateRequirements() { return new Resources(this.updateRequirements); }
 
     public Resources getConsumption() {
         Resources resources = new Resources();

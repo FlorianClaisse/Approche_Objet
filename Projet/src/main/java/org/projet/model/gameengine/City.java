@@ -35,10 +35,10 @@ public final class City {
     }
 
     public Map<Integer, Building> getConstructedBuildings() {
-        return this.constructedBuildings;
+        return new HashMap<>(this.constructedBuildings);
     }
     public Map<Integer, Building> getUnderConstructionBuildings() {
-        return this.underConstructionBuildings;
+        return new HashMap<>(this.underConstructionBuildings);
     }
     public int getNbHabitants() {
         return this.habitants.get();

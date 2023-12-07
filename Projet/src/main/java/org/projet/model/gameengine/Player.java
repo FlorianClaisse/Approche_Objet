@@ -28,7 +28,7 @@ public final class Player implements ShopDelegate {
     }
 
     public Resources getStock() {
-        return stock;
+        return new Resources(stock);
     }
 
     // ShopDelegate
