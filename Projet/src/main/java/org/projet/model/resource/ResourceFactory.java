@@ -2,6 +2,9 @@ package org.projet.model.resource;
 
 import static org.projet.model.resource.Material.Type.*;
 
+/**
+ * The class used to create the different resources
+ */
 public final class ResourceFactory {
     public static Gold gold() { return new Gold(); }
 

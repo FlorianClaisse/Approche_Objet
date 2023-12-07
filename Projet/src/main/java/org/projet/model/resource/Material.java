@@ -2,6 +2,9 @@ package org.projet.model.resource;
 
 import java.util.Objects;
 
+/**
+ * The class representing the different materials in the game (resources that are purchasable)
+ */
 public final class Material implements Purchasable {
     private final Type type;
     private final int price;

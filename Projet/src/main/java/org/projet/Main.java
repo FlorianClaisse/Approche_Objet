@@ -9,6 +9,7 @@ import org.projet.model.resource.Resources;
 import java.util.Map;
 import java.util.Scanner;
 
+
 public class Main {
     private static int dayNumber = 1;
     private static boolean rollback = false;

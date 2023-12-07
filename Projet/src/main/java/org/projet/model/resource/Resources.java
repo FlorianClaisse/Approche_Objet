@@ -6,6 +6,9 @@ import java.util.HashMap;
 
 import static org.projet.model.resource.ResourceFactory.gold;
 
+/**
+ * The class used to associate resources with a quantity
+ */
 public final class Resources extends HashMap<Resource, Quantity> {
 
     public Resources(Resources resources) {
@@ -16,6 +19,9 @@ public final class Resources extends HashMap<Resource, Quantity> {
         super();
     }
 
+    /**
+     * Initialize the HashMap with all the resources and their quantities at 0
+     */
     public void initWithAllResources() {
         this.put(gold(), new Quantity());
 

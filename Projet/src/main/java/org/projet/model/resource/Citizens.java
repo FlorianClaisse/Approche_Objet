@@ -1,11 +1,14 @@
 package org.projet.model.resource;
 
-import org.projet.model.gameengine.Player;
 import org.projet.model.gameengine.ResourcesConsumer;
+import org.projet.model.gameengine.ResourcesManager;
 import org.projet.utils.Quantity;
 
 import static org.projet.model.resource.ResourceFactory.food;
 
+/**
+ * The city habitants, consuming resources
+ */
 public final class Citizens implements ResourcesConsumer {
     private final Quantity quantity = new Quantity();
 
@@ -27,7 +30,7 @@ public final class Citizens implements ResourcesConsumer {
         return resources;
     }
     @Override
-    public void removeConsumption(Player player) {
+    public void removeConsumption(ResourcesManager player) {
         player.removeFromStock(getConsumption());
     }
 }

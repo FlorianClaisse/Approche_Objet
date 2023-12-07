@@ -4,6 +4,9 @@ import org.projet.model.resource.Resource;
 import org.projet.model.resource.Resources;
 import org.projet.utils.Quantity;
 
+/**
+ * The class used to set the different attributes of a building and return it
+ */
 public class BuildingBuilder {
     private Building.Type type = null; // Pour être obligé de set le type dans le builder sinon exception
     private int price = 0;

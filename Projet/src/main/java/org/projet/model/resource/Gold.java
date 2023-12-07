@@ -2,6 +2,9 @@ package org.projet.model.resource;
 
 import java.util.Objects;
 
+/**
+ * The game resource used as money
+ */
 public final class Gold implements Resource {
 
     public Gold() {}

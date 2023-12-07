@@ -14,6 +14,9 @@ import java.util.Map;
 import static org.projet.model.building.BuildingFactory.*;
 import static org.projet.model.resource.ResourceFactory.food;
 
+/**
+ * The city of the game with its buildings, its habitants, its shop and its manager (the player)
+ */
 public final class City {
     private static int BUILDING_COUNTER = 0;
     private static int UNDER_COUNTER = 0;
@@ -29,12 +32,21 @@ public final class City {
     private final ShopBuyer manager;
     private final Shop shop;
 
+    /**
+     * @param manager The manager of resources
+     */
     public City(ShopBuyer manager) {
         this.manager = manager;
         this.manager.subscribe(habitants); // Habitants --> ResourcesConsumer
         this.shop = new Shop();
     }
 
+    /**
+     * The end of one day in the city,
+     * making the player collect and provide resources,
+     * decremeting by one unit the construction time of all the buildings under construction,
+     * moving an under construction building to the constructed building list if its construction time is finished
+     */
     public void dayEnd() {
         manager.collectProduction();
         manager.provideConsumption();
@@ -60,6 +72,9 @@ public final class City {
         toBeRemoved.forEach(this.underConstructionBuildings::remove);
     }
 
+    /**
+     * @return the resources produced by all the constructed buildings
+     */
     public Resources getCurrentProduction() {
         Resources production = new Resources();
         production.initWithAllResources();
@@ -70,6 +85,9 @@ public final class City {
         return production;
     }
 
+    /**
+     * @return the resources consumed by all the constructed buildings and the citizens of the city
+     */
     public Resources getCurrentConsumption() {
         Resources consumption = new Resources();
         consumption.initWithAllResources();
@@ -81,10 +99,22 @@ public final class City {
         return consumption;
     }
 
+    /**
+     * Let the player buy materials from the city shop
+     * @param type The type of the material
+     * @param quantity The quantity of the material
+     * @return true if the player was able to buy the materials from the shop
+     */
     public boolean buyMaterials(Material.Type type, int quantity) {
         return shop.buyMaterials(manager, type, quantity);
     }
 
+    /**
+     * Put a new build under construction in the city
+     * @param type The type of the new building
+     * @return false if the number of free habitants from the city + the number of habitants created by the building is inferior to its minimum workers number
+     * @return false if the player can't buy the building
+     */
     public boolean buildNewBuilding(Building.Type type) {
         Building building = makeBuilding(type);
 
@@ -102,6 +132,12 @@ public final class City {
         return true;
     }
 
+    /**
+     * Try to upgrade a constructed building
+     * @param key The index of a constructed building in the city
+     * @return false if the player don't have enough resources to upgrade the building
+     * @return false if the building can't be upgraded further
+     */
     public boolean upgradeBuilding(int key) {
         if (!this.constructedBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
         Building building = this.constructedBuildings.get(key);
@@ -113,6 +149,10 @@ public final class City {
         return true;
     }
 
+    /**
+     * Remove a constructed building
+     * @param key The index of a constructed building in the city
+     */
     public void removeExistingBuilding(int key) {
         if (!this.constructedBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
         Building building = this.constructedBuildings.get(key);
@@ -130,6 +170,10 @@ public final class City {
         this.constructedBuildings.remove(key);
     }
 
+    /**
+     * Remove a building under construction
+     * @param key The index of a building under construction in the city
+     */
     public void removeUnderConstructionBuilding(int key) {
         if (!this.underConstructionBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
 
@@ -143,6 +187,13 @@ public final class City {
         this.underConstructionBuildings.remove(key);
     }
 
+    /**
+     * Try to add workers to a constructed building
+     * @param key The index of a constructed building in the city
+     * @param quantity The quantity of workers to add
+     * @return false if the number of free habitants in the city is inferior to the given quantity
+     * @return false if the quantity given does not respect the maximum number of workers to respect in the building
+     */
     public boolean addWorkersToBuilding(int key, int quantity) {
         if (!this.constructedBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
 
@@ -158,6 +209,12 @@ public final class City {
         return true;
     }
 
+    /**
+     * Try to remove workers from a constructed building
+     * @param key The index of a constructed building in the city
+     * @param quantity The quantity of workers to remove
+     * @return false if the removing the given quantity does not respect the minimum number of workers needed in the building
+     */
     public boolean removeWorkersFromBuilding(int key, int quantity) {
         if (!this.constructedBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
 
@@ -169,28 +226,52 @@ public final class City {
         return true;
     }
 
+    /**
+     * @return the constructed buildings in the city
+     */
     public Map<Integer, Building> getConstructedBuildings() {
         return new HashMap<>(this.constructedBuildings);
     }
+    /**
+     * @return the buildings under construction in the city
+     */
     public Map<Integer, Building> getUnderConstructionBuildings() {
         return new HashMap<>(this.underConstructionBuildings);
     }
+    /**
+     * @return the total number of habitants in the city
+     */
     public int getNbHabitants() {
         return this.habitants.getNumber();
     }
+    /**
+     * @return the number of future habitants "coming" to the city with the construction of some buildings
+     */
     public int getNbFutureHabitants() {
         return this.futureHabitants.get();
     }
+    /**
+     * @return the current number of habitants working in buildings
+     */
     public int getNbWorkers() {
         return this.workers.get();
     }
+    /**
+     * @return the number of current/future habitants that are going to work with the construction of some buildings
+     */
     public int getNbFutureWorkers() {
         return this.futureWorkers.get();
     }
+    /**
+     * @return the number of habitants and future habitants not working/going to work
+     */
     private int getFreeHabitants() {
         return (this.habitants.getNumber() + this.futureHabitants.get()) - (this.futureWorkers.get() + this.workers.get());
     }
 
+    /**
+     * @return true if there is a launching rocket platform fully upgraded and with the maximum number of workers currently working
+     */
     public boolean isWinning() {
         for (Building building : this.constructedBuildings.values()) {
             if (building.getType().equals(Building.Type.LAUNCHING_ROCKET_PLATFORM) && building.isMaxLevel() && building.getCurrentWorkers() == building.getMaxWorkers())
@@ -199,6 +280,11 @@ public final class City {
         return false;
     }
 
+    /**
+     * Use the static BuildingFactory to make a building
+     * @param type The type of the building to make
+     * @return the building
+     */
     private Building makeBuilding(Building.Type type) {
         return switch (type) {
             case APARTMENT_BUILDING -> makeApartment();

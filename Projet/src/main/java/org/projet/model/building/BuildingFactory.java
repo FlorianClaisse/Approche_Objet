@@ -3,7 +3,9 @@ package org.projet.model.building;
 import static org.projet.model.building.Building.Type.*;
 import static org.projet.model.resource.ResourceFactory.*;
 
-
+/**
+ * The class used to create buildings with specifics values as attributes
+ */
 public class BuildingFactory {
 
     public static Building makeWoodenCabin() {
