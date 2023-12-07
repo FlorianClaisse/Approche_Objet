@@ -3,7 +3,6 @@ package org.projet;
 import org.projet.model.building.Building;
 import org.projet.model.gameengine.City;
 import org.projet.model.gameengine.Player;
-import org.projet.model.gameengine.Shop;
 import org.projet.model.resource.Material;
 import org.projet.model.resource.Resources;
 
@@ -15,8 +14,7 @@ public class Main {
     private static boolean rollback = false;
     private static final Scanner scanner = new Scanner(System.in);
     private static final Player player = new Player();
-    private static final Shop shop = new Shop(player);
-    private static final City city = new City(player, shop);
+    private static final City city = new City(player);
 
     private static void prompt(String message) {
         System.out.println("---------------------------");
@@ -132,7 +130,7 @@ public class Main {
             return;
         }
 
-        if(!shop.buyMaterials(materialTypes[type], quantity))
+        if(!city.buyMaterials(materialTypes[type], quantity))
             System.out.println("You don't have enough gold to buy this many materials.");
     }
 
@@ -151,7 +149,7 @@ public class Main {
             return;
         }
 
-        if (!city.purchaseBuilding(buildingTypes[type])) {
+        if (!city.buildNewBuilding(buildingTypes[type])) {
             System.out.println("You don't have enough resources or free habitants to build this building.");
             rollback = true;
         }

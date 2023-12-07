@@ -3,9 +3,6 @@ package org.projet.model.resource;
 import static org.projet.model.resource.Material.Type.*;
 
 public final class ResourceFactory {
-
-    public static Citizen citizen() { return new Citizen(); }
-
     public static Gold gold() { return new Gold(); }
 
     public static Material food() { return new Material(FOOD); }

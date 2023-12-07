@@ -7,6 +7,7 @@ public final class Quantity {
 
     public Quantity() { this(0); }
     public Quantity(int value) { this.value = value; }
+    public Quantity(Quantity quantity) { this.value = quantity.get(); }
 
     public int get() { return this.value; }
     public void set(int value) { this.value = value; }

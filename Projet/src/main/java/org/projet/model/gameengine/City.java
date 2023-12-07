@@ -2,6 +2,8 @@ package org.projet.model.gameengine;
 
 import org.projet.model.building.Building;
 import org.projet.model.building.BuildingFactory;
+import org.projet.model.resource.Citizens;
+import org.projet.model.resource.Material;
 import org.projet.model.resource.Resources;
 import org.projet.utils.Quantity;
 
@@ -19,52 +21,23 @@ public final class City {
     private final Map<Integer, Building> constructedBuildings =  new HashMap<>();
     private final Map<Integer, Building> underConstructionBuildings =  new HashMap<>();
 
-    private final Quantity habitants = new Quantity();
+    private final Citizens habitants = new Citizens();
     private final Quantity futureHabitants = new Quantity();
-
-
-    private final Quantity futureWorkers = new Quantity();
     private final Quantity workers = new Quantity();
+    private final Quantity futureWorkers = new Quantity();
 
+    private final ShopBuyer manager;
     private final Shop shop;
-    private final ResourceManager player;
 
-    public City(ResourceManager player, Shop shop) {
-        this.player = player;
-        this.shop = shop;
-    }
-
-    public Map<Integer, Building> getConstructedBuildings() {
-        return new HashMap<>(this.constructedBuildings);
-    }
-    public Map<Integer, Building> getUnderConstructionBuildings() {
-        return new HashMap<>(this.underConstructionBuildings);
-    }
-    public int getNbHabitants() {
-        return this.habitants.get();
-    }
-    public int getNbFutureHabitants() {
-        return this.futureHabitants.get();
-    }
-    public int getNbFutureWorkers() {
-        return this.futureWorkers.get();
-    }
-    public int getNbWorkers() {
-        return this.workers.get();
-    }
-    private int getFreeHabitants() {
-        return (this.habitants.get() + this.futureHabitants.get()) - (this.futureWorkers.get() + this.workers.get());
+    public City(ShopBuyer manager) {
+        this.manager = manager;
+        this.manager.subscribe(habitants); // Habitants --> ResourcesConsumer
+        this.shop = new Shop();
     }
 
     public void dayEnd() {
-        this.constructedBuildings.forEach((id, b) -> {
-            this.player.addToStock(b.getProduction());
-            this.player.removeFromStock(b.getConsumption());
-        });
-        Resources habitantsConsumption = new Resources();
-        habitantsConsumption.initWithAllResources();
-        habitantsConsumption.get(food()).add(habitants.get());
-        this.player.removeFromStock(habitantsConsumption);
+        manager.collectProduction();
+        manager.provideConsumption();
 
         ArrayList<Integer> toBeRemoved = new ArrayList<>();
         for (Map.Entry<Integer, Building> entry: this.underConstructionBuildings.entrySet()) {
@@ -72,6 +45,7 @@ public final class City {
             building.removeOnePeriod();
 
             if (building.isBuilt()) {
+                this.manager.subscribe(building);
                 this.habitants.add(building.getNbHabitants());
                 this.futureHabitants.remove(building.getNbHabitants());
                 this.futureWorkers.remove(building.getCurrentWorkers());
@@ -103,18 +77,22 @@ public final class City {
             Building building = entry.getValue();
             building.getConsumption().forEach((r, q) -> consumption.get(r).add(q.get()));
         }
-        consumption.get(food()).add(habitants.get());
+        consumption.get(food()).add(habitants.getNumber());
         return consumption;
     }
 
-    public boolean purchaseBuilding(Building.Type type) {
-        Building building = this.makeBuilding(type);
+    public boolean buyMaterials(Material.Type type, int quantity) {
+        return shop.buyMaterials(manager, type, quantity);
+    }
+
+    public boolean buildNewBuilding(Building.Type type) {
+        Building building = makeBuilding(type);
 
         // Il doit y avoir assez d'habitants libres pour travailler
         if (this.getFreeHabitants() + building.getNbHabitants() - building.getMinWorkers() < 0) return false;
 
-        // Le player doit avoir assez de ressources
-        if (!this.shop.buyBuilding(building)) return false;
+        // Le player doit avoir assez de ressources (matériaux et argent)
+        if (!this.shop.buyBuilding(manager, building)) return false;
 
         this.futureHabitants.add(building.getNbHabitants());
         this.futureWorkers.add(building.getMinWorkers());
@@ -127,10 +105,10 @@ public final class City {
     public boolean upgradeBuilding(int key) {
         if (!this.constructedBuildings.containsKey(key)) throw new IllegalStateException("Can't find building with given key");
         Building building = this.constructedBuildings.get(key);
-        if (!this.player.haveEnoughResources(building.getUpdateRequirements())) return false;
+        if (!this.manager.haveEnoughResources(building.getUpdateRequirements())) return false;
         if (!building.canBeUpgraded()) return false;
 
-        this.player.removeFromStock(building.getUpdateRequirements());
+        this.manager.removeFromStock(building.getUpdateRequirements());
         building.upgrade();
         return true;
     }
@@ -147,7 +125,7 @@ public final class City {
         Resources recoveredMaterials = new Resources();
         recoveredMaterials.initWithAllResources();
         buildingRequirements.forEach((r, q) -> recoveredMaterials.get(r).add(q.get() / 4));
-        this.player.addToStock(recoveredMaterials);
+        this.manager.addToStock(recoveredMaterials);
 
         this.constructedBuildings.remove(key);
     }
@@ -160,7 +138,7 @@ public final class City {
         Resources recoveredMaterials = new Resources();
         recoveredMaterials.initWithAllResources();
         buildingRequirements.forEach((r, q) -> recoveredMaterials.get(r).add(q.get() / 2));
-        this.player.addToStock(recoveredMaterials);
+        this.manager.addToStock(recoveredMaterials);
 
         this.underConstructionBuildings.remove(key);
     }
@@ -189,6 +167,28 @@ public final class City {
         this.workers.remove(quantity);
         building.removeWorkers(quantity);
         return true;
+    }
+
+    public Map<Integer, Building> getConstructedBuildings() {
+        return new HashMap<>(this.constructedBuildings);
+    }
+    public Map<Integer, Building> getUnderConstructionBuildings() {
+        return new HashMap<>(this.underConstructionBuildings);
+    }
+    public int getNbHabitants() {
+        return this.habitants.getNumber();
+    }
+    public int getNbFutureHabitants() {
+        return this.futureHabitants.get();
+    }
+    public int getNbWorkers() {
+        return this.workers.get();
+    }
+    public int getNbFutureWorkers() {
+        return this.futureWorkers.get();
+    }
+    private int getFreeHabitants() {
+        return (this.habitants.getNumber() + this.futureHabitants.get()) - (this.futureWorkers.get() + this.workers.get());
     }
 
     public boolean isWinning() {

@@ -1,10 +1,13 @@
 package org.projet.model.building;
 
+import org.projet.model.gameengine.Player;
+import org.projet.model.gameengine.ResourcesConsumer;
+import org.projet.model.gameengine.ResourcesProvider;
 import org.projet.model.resource.Purchasable;
 import org.projet.model.resource.Resources;
 import org.projet.utils.Quantity;
 
-public class Building implements Purchasable {
+public class Building implements Purchasable, ResourcesProvider, ResourcesConsumer {
     private static final int maxLevel = 5;
 
     private int level = 1;
@@ -45,10 +48,24 @@ public class Building implements Purchasable {
         this.remainingTime = buildTime;
     }
 
+    public boolean canAddWorkers(int quantity) {
+        return (this.currentWorkers + quantity) <= this.maxWorkers;
+    }
+    public boolean canRemoveWorkers(int quantity) {
+        return (this.currentWorkers - quantity) >= this.minWorkers;
+    }
+    public void addWorkers(int quantity) {
+        if (!canAddWorkers(quantity)) throw new IllegalStateException("Can't add workers, please use canAddWorkers()");
+        this.currentWorkers += quantity;
+    }
+    public void removeWorkers(int quantity) {
+        if (!canRemoveWorkers(quantity)) throw new IllegalStateException("Can't remove workers, please use canRemoveWorkers()");
+        this.currentWorkers -= quantity;
+    }
+
     public boolean canBeUpgraded() {
         return this.level != maxLevel && !(this.type == Type.HOUSE || this.type == Type.APARTMENT_BUILDING);
     }
-
     public void upgrade() {
         if (!canBeUpgraded()) throw new IllegalStateException("Please use canBeUpgraded before upgrade.");
         this.level++;
@@ -57,32 +74,12 @@ public class Building implements Purchasable {
         // New requirements for future upgrade
         this.updateRequirements.forEach((r, q) -> q.set((int)Math.ceil(q.get() * 1.5)));
     }
-
     public boolean isMaxLevel() { return this.level == maxLevel; }
-
-    public boolean canAddWorkers(int quantity) {
-        return (this.currentWorkers + quantity) <= this.maxWorkers;
-    }
-
-    public boolean canRemoveWorkers(int quantity) {
-        return (this.currentWorkers - quantity) >= this.minWorkers;
-    }
-
-    public void addWorkers(int quantity) {
-        if (!canAddWorkers(quantity)) throw new IllegalStateException("Can't add workers, please use canAddWorkers()");
-        this.currentWorkers += quantity;
-    }
-
-    public void removeWorkers(int quantity) {
-        if (!canRemoveWorkers(quantity)) throw new IllegalStateException("Can't remove workers, please use canRemoveWorkers()");
-        this.currentWorkers -= quantity;
-    }
 
     public void removeOnePeriod() {
         if (this.remainingTime > 0)
             this.remainingTime--;
     }
-
     public boolean isBuilt() { return this.remainingTime == 0; }
 
     public Type getType() { return this.type; }
@@ -95,15 +92,25 @@ public class Building implements Purchasable {
     public Resources getBuildRequirements() { return new Resources(this.buildRequirements); }
     public Resources getUpdateRequirements() { return new Resources(this.updateRequirements); }
 
+    @Override
     public Resources getConsumption() {
         Resources resources = new Resources();
         this.consumption.forEach((r, q) -> resources.put(r, new Quantity((int)Math.ceil(q.get() * this.currentWorkers / this.minWorkers))));
         return resources;
     }
+    @Override
     public Resources getProduction() {
         Resources resources = new Resources();
         this.production.forEach((r, q) -> resources.put(r, new Quantity((int)Math.ceil(q.get() * this.currentWorkers / this.minWorkers))));
         return resources;
+    }
+    @Override
+    public void addProduction(Player player) {
+        player.addToStock(getProduction());
+    }
+    @Override
+    public void removeConsumption(Player player) {
+        player.removeFromStock(getConsumption());
     }
 
     @Override
