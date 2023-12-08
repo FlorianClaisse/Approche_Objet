@@ -1,7 +1,5 @@
 org.projet
-org.projet.controller
 org.projet.model.building
 org.projet.model.gameengine
 org.projet.model.resource
 org.projet.utils
-org.projet.view

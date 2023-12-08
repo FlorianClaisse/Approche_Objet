@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.projet"},{"l":"org.projet.controller"},{"l":"org.projet.model.building"},{"l":"org.projet.model.gameengine"},{"l":"org.projet.model.resource"},{"l":"org.projet.utils"},{"l":"org.projet.view"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.projet"},{"l":"org.projet.model.building"},{"l":"org.projet.model.gameengine"},{"l":"org.projet.model.resource"},{"l":"org.projet.utils"}];updateSearchResults();
