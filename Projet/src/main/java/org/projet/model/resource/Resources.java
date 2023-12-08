@@ -7,7 +7,7 @@ import java.util.HashMap;
 import static org.projet.model.resource.ResourceFactory.gold;
 
 /**
- * The class used to associate resources with a quantity
+ * The class defining "resources" as a collection of resources associated with a quantity
  */
 public final class Resources extends HashMap<Resource, Quantity> {
 

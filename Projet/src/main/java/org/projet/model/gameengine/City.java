@@ -167,6 +167,7 @@ public final class City {
         buildingRequirements.forEach((r, q) -> recoveredMaterials.get(r).add(q.get() / 4));
         this.manager.addToStock(recoveredMaterials);
 
+        this.manager.unsubscribe(building);
         this.constructedBuildings.remove(key);
     }
 

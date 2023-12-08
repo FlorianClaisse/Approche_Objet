@@ -27,10 +27,12 @@ public final class Player implements ShopBuyer {
         stock.get(food()).add(10);
         stock.get(gold()).add(10);
 
+        /* Pour tester
         for(Material.Type type : Material.Type.values()) {
             stock.get(new Material(type)).add(99999);
         }
         stock.get(gold()).add(99999);
+         */
     }
 
     /**
@@ -95,7 +97,7 @@ public final class Player implements ShopBuyer {
 
     // ResourcesManager
     /**
-     * Notifies the different resources provider subscribed to the player to provide resources for the player
+     * Notifies the differents resources providers subscribed to the player to provide resources for the player
      */
     @Override
     public void collectProduction() {
@@ -104,7 +106,7 @@ public final class Player implements ShopBuyer {
         }
     }
     /**
-     * Notifies the different resources consumer subscribed to the player to consume resources in the player stock
+     * Notifies the differents resources consumers subscribed to the player to consume resources in the player stock
      */
     @Override
     public void provideConsumption() {
@@ -137,5 +139,30 @@ public final class Player implements ShopBuyer {
     public void subscribe(Building building) {
         providers.add(building);
         consumers.add(building);
+    }
+    /**
+     * Unsubscribes a resource provider from the player
+     * @param provider The resource provider
+     */
+    @Override
+    public void unsubscribe(ResourcesProvider provider) {
+        providers.remove(provider);
+    }
+    /**
+     * Unsubscribes a resource consumer from the player
+     * @param consumer The resource consumer
+     */
+    @Override
+    public void unsubscribe(ResourcesConsumer consumer) {
+        consumers.remove(consumer);
+    }
+    /**
+     * Unsubscribes a building both as a resource provider and consumer from the player
+     * @param building The building
+     */
+    @Override
+    public void unsubscribe(Building building) {
+        providers.remove(building);
+        consumers.remove(building);
     }
 }
